@@ -7,9 +7,9 @@ public class Validation {
         boolean check = true;
         String result = "";
         do {
-            Scanner sc = new Scanner(System.in);
+            Scanner scanner = new Scanner(System.in);
             System.out.print(welcome);
-            result = sc.nextLine();
+            result = scanner.nextLine();
             if (result.isEmpty()) {
                 System.out.println("Input text please !");
             } else {
@@ -21,9 +21,9 @@ public class Validation {
 
     public static String updateString(String welcome, String oldData) {
         String result = oldData;
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         System.out.print(welcome);
-        String tmp = sc.nextLine();
+        String tmp = scanner.nextLine();
         if (!tmp.isEmpty()) {
             result = tmp;
         }
@@ -35,9 +35,9 @@ public class Validation {
         int number = 0;
         do {
             try {
-                Scanner sc = new Scanner(System.in);
+                Scanner scanner = new Scanner(System.in);
                 System.out.print(welcome);
-                number = Integer.parseInt(sc.nextLine());
+                number = Integer.parseInt(scanner.nextLine());
                 check = false;
             } catch (Exception e) {
                 System.out.println("Input number!!!");
@@ -51,9 +51,9 @@ public class Validation {
         int number = oldData;
         do {
             try {
-                Scanner sc = new Scanner(System.in);
+                Scanner scanner = new Scanner(System.in);
                 System.out.print(welcome);
-                String tmp = sc.nextLine();
+                String tmp = scanner.nextLine();
                 if (tmp.isEmpty()) {
                     check = false;
                 } else {
