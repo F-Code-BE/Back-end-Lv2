@@ -2,6 +2,9 @@ package model;
 
 public class Slot {
     private String id;
+    private byte slot;
+    // TODO: create fields date
+    // private Date date;
     private String classId;
     private String teacherId;
     private String roomId;
@@ -9,17 +12,23 @@ public class Slot {
     public Slot() {
     }
 
-    public Slot(String id, String classId, String teacherId, String roomId) {
+    public Slot(String id, byte slot, String classId, String teacherId, String roomId) {
         this.id = id;
         this.classId = classId;
         this.teacherId = teacherId;
         this.roomId = roomId;
+        this.slot = slot;
     }
 
     public String getId() {
         return id;
     }
-
+    public byte getSlot() {
+        return slot;
+    }
+    // public String getDate() {
+    //     return date.toString();
+    // }
     public String getClassId() {
         return classId;
     }
@@ -36,6 +45,12 @@ public class Slot {
         this.id = id;
     }
 
+    public void setSlotId(byte slot) {
+        this.slot = slot;
+    }
+    // public void setDate(String date) {
+    //     this.date = new Date(date);
+    // }
     public void setClassId(String classId) {
         this.classId = classId;
     }
