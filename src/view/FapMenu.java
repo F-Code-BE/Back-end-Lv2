@@ -19,7 +19,7 @@ import java.util.Vector;
                 System.out.println(i + ". " + option);
                 i++;
             }
-            return Utilities.getInt("Enter your choice: ", true);
+            return Ultilities.getInt("Enter your choice: ", true);
         }
         
 }

@@ -2,7 +2,7 @@ package view;
 
 import java.util.Scanner;
 
-public class Utilities {
+public class Ultilities {
     public static int getInt(String message, boolean isReguiredPosive) {
         boolean cont = false;
         int value = 0;
