@@ -17,4 +17,4 @@ WHERE st.class_id = 'SE1602_PRF192';
 
 UPDATE Class_student
 SET class_id = 'SE1602_PRF192'
-WHERE student_id = 'SE160001';
+WHERE student_id = 'SE160001' AND st.class_id = 'SE1601_PRF192';
