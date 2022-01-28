@@ -28,9 +28,9 @@ WHERE class_id = 'SE1601_PRF192';
 -- get slot id from new class
 SELECT id AS sLot_id
 FROM Slot s
-WHERE class_id = 'SE1602_PRF192'; -- slot id
+WHERE class_id = 'SE1602_PRF192'; 
 
 -- Update new slot 
 Update Attendance
 SET slot_id = '1234'
-WHERE student_id = 'SE160001';
+WHERE student_id = 'SE160001' AND slot_id = '1232';
