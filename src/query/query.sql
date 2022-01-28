@@ -9,16 +9,16 @@ WHERE cs.student_id = 'SE160001';
 SELECT c.id, c.group_id, st.id AS slot_type, c.semester_id, c.max_student
 FROM Class c
     JOIN Slot_type st ON c.id = st.class_id
-WHERE c.course_id = 'PRF192' AND NOT c.group_id = 'SE1601';
+WHERE c.course_id = 'PRF192' AND NOT c.group_id = 'SE1602';
 
 
 SELECT *
 FROM Slot_type st
-WHERE st.class_id = 'SE1602_PRF192';
+WHERE st.class_id = 'SE1601_PRF192';
 
--- UPDATE Class_student
--- SET class_id = 'SE1602_PRF192'
--- WHERE student_id = 'SE160001' AND st.class_id = 'SE1601_PRF192';
+UPDATE Class_student
+SET class_id = 'SE1601_PRF192'
+WHERE student_id = 'SE160001' AND class_id = 'SE1602_PRF192';
 
 
 -- get slot id from old class
@@ -31,6 +31,6 @@ FROM Slot s
 WHERE class_id = 'SE1602_PRF192'; 
 
 -- Update new slot 
-Update Attendance
-SET slot_id = '1234'
-WHERE student_id = 'SE160001' AND slot_id = '1232';
+UPDATE Attendance
+SET slot_id = 'SE1601_PRF192_0902_08'
+WHERE student_id = 'SE160001' AND slot_id = '1234';
