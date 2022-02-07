@@ -42,13 +42,6 @@ public class Validation {
                     throw new Exception();
                 }
                 flag = false;
-            } catch (Exception e) {
-
-                flag = true;
-                System.out.println("Invalid.");
-            }
-        } while (flag);
-        return number;
     }
 
     public static String inputString(String message, String pattern) {
@@ -77,7 +70,6 @@ public class Validation {
     public static String inputString(String message, String oldValue, String pattern) {
         String result = null;
         boolean flag = false;
-
         do {
             System.out.print(message);
             try {
@@ -99,13 +91,11 @@ public class Validation {
 
     public static boolean inputBoolean(String message) {
         boolean flag = false;
-        boolean results;
         do {
             System.out.print(message);
             String str = sc.nextLine();
-
-            try {
-                if (!str.equalsIgnoreCase("true") && !str.equalsIgnoreCase("false"))
+                if (!result.equalsIgnoreCase("y") && !result.equalsIgnoreCase("n") && !result.equalsIgnoreCase("yes")
+                        && !result.equalsIgnoreCase("no"))
                     throw new Exception();
                 results = Boolean.parseBoolean(str);
                 return results;
@@ -115,8 +105,10 @@ public class Validation {
                 System.out.println("Invalid.");
             }
         } while (flag);
-
-        return false;
+        if (result.equalsIgnoreCase("y") || result.equalsIgnoreCase("yes")) {
+            return true;
+        } else {
+        }
     }
 
     public static double inputFloat(String message) {
@@ -126,29 +118,6 @@ public class Validation {
             System.out.print(message);
             try {
                 number = Double.parseDouble(sc.nextLine());
-                if (number < 0) {
-                    throw new Exception();
-                }
-                flag = false;
-            } catch (Exception e) {
-
-                flag = true;
-                System.out.println("Invalid.");
-            }
-        } while (flag);
-        return number;
-    }
-
-    public static double inputFloat(String message, double oldValue) {
-        double number = -1;
-        boolean flag = false;
-        do {
-            System.out.print(message);
-            try {
-                String result = sc.nextLine();
-                if (result.isEmpty())
-                    return oldValue;
-                number = Double.parseDouble(result);
                 if (number < 0) {
                     throw new Exception();
                 }
@@ -180,5 +149,4 @@ public class Validation {
 
         return formatter.format(dateResult);
     }
-
 }
