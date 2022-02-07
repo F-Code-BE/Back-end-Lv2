@@ -1,25 +1,22 @@
 package model;
 
+import java.util.Date;
+
 public class Student {
 
     private String id;
     private String name;
-    private String dateOfBirth;
+    private Date dateOfBirth;
     private String mail;
     private String majorID;
 
     public Student() {
-        id = "";
-        name = "";
-        dateOfBirth = "";
-        mail = "";
-        majorID = "";
     }
 
     public Student(
             String id,
             String name,
-            String dateOfBirth,
+            Date dateOfBirth,
             String mail,
             String majorID) {
         this.id = id;
@@ -38,7 +35,7 @@ public class Student {
         return name;
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -59,7 +56,7 @@ public class Student {
         this.name = name;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
