@@ -5,7 +5,7 @@ FROM Class_student cs
 WHERE cs.student_id = 'SE160001';
 
 
-SELECT c.id, c.group_id, st.id AS slot_type, c.semester_id, c.max_student
+SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student
 FROM Class c
     JOIN Slot_type st ON c.id = st.class_id
 WHERE c.course_id = 'PRF192' AND NOT c.group_id = 'SE1601';
@@ -17,4 +17,4 @@ WHERE st.class_id = 'SE1602_PRF192';
 
 UPDATE Class_student
 SET class_id = 'SE1602_PRF192'
-WHERE student_id = 'SE160001';
+WHERE student_id = 'SE160001' AND class_id = 'SE1601_PRF192';

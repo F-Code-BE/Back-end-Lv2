@@ -74,30 +74,95 @@ class TimeTable {
             ", maxStudent='" + getMaxStudent() + "'" ;
     }
 }  
-    
+
+class GroupCourse extends TimeTable { 
+
+}
 public class ChangeGroup {
-    public static inputCourseId() {
-        String courseId = new String();
+    public static String inputCourseId() {
+        String courseId = new String(Validation.inputString("Enter CourseId: ", ""));
+        return courseId;
+    }
+    public static String inputGroupId() {
+        String groupId = new String(Validation.inputString("Enter GroupId: ", ""));
+        return groupId;
     }
     public static void getAllCourses(String userId) {
         Connection conn = Singleton.getInstance();        
-        System.out.println("-------------------------");
+        System.out.println("--------CHANGE GROUP---------");
 
         try {
-            TimeTable timetable = new TimeTable();
+            // show time table
+            String courseId = new String();
+            String currentGroupId = new String();
+            String classId = new String();
+            String groupId = new String();
+            String oldClass = new String();
+            Vector <TimeTable> timetable = new Vector<TimeTable>();
+            int count = 0;
             Statement statement = conn.createStatement();
             String queryString = "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = " + "'" + userId + "'";
             ResultSet resultSet = statement.executeQuery(queryString);
             
-            while(resultSet.next()) {    
-                System.out.println("true");
-                timetable.setGroupId(resultSet.getString(1));
-                timetable.setCourseId(resultSet.getString(2));
-                timetable.setSlotType(resultSet.getString(3));
-                timetable.setSemesterId(resultSet.getString(4));
-                timetable.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
-                System.out.println(timetable.toString());
+            System.out.println("ALL COURSE:");
+            while (resultSet.next()) {
+                TimeTable timetableModel = new TimeTable();
+                timetableModel.setGroupId(resultSet.getString(1));
+                timetableModel.setCourseId(resultSet.getString(2));
+                timetableModel.setSlotType(resultSet.getString(3));
+                timetableModel.setSemesterId(resultSet.getString(4));
+                timetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5))); 
+                timetable.add(timetableModel);
             }
+            for (TimeTable t : timetable) {
+                System.out.println(t.toString());
+            }
+            courseId = inputCourseId();    
+            for (TimeTable t : timetable) {
+                if (t.getCourseId().equals(courseId)) {
+                    currentGroupId = t.getGroupId();
+                    break;
+                }
+            }
+            // show all available classes for the course
+            queryString = "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class c JOIN Slot_type st ON c.id = st.class_id WHERE c.course_id = " + "'" + courseId + "'" +  "AND NOT c.group_id = " + "'" + currentGroupId + "'";
+            resultSet = statement.executeQuery(queryString);
+            Vector<GroupCourse> groupCourse = new Vector<GroupCourse>();
+            while(resultSet.next()) {
+                GroupCourse groupCourseModel = new GroupCourse();
+                groupCourseModel.setGroupId(resultSet.getString(1));
+                groupCourseModel.setCourseId(resultSet.getString(2));
+                groupCourseModel.setSlotType(resultSet.getString(3));
+                groupCourseModel.setSemesterId(resultSet.getString(4));
+                groupCourseModel.setMaxStudent(Integer.parseInt(resultSet.getString(5))); 
+                groupCourse.add(groupCourseModel);
+            }
+            
+            System.out.println("ALL GROUP AVAILABLE: ");
+            for (GroupCourse gr : groupCourse) {
+                System.out.println(gr.toString());
+            }
+
+            //Choose group id and check if there was a duplicate
+            groupId = inputGroupId();
+            classId =  groupId + "_" + courseId;
+            oldClass = currentGroupId + "_" +courseId;
+            queryString = "SELECT st.id FROM Slot_type st WHERE st.class_id = " + "'" + classId + "'";
+            resultSet = statement.executeQuery(queryString);
+
+            while(resultSet.next()) {
+                String slotType =  new String(resultSet.getString(1));
+                for (TimeTable time : timetable) {
+                    if (time.getSlotType().equals(slotType)) {
+                        throw new Exception("Duplicated slot");
+                    }
+                }
+            }
+            
+            // update new class to class table
+            queryString = "UPDATE Class_student SET class_id = '" + classId + "' WHERE student_id = '" + userId + "' AND class_id = '" + oldClass + "'";
+            statement.executeUpdate(queryString);
+            System.out.println("Successfully change");
         } catch (Exception e) {
             System.out.println(e);
         }
