@@ -8,7 +8,7 @@ public class Validation {
 
     private static Scanner sc = new Scanner(System.in);
 
-    public static int inputNumber(String message) {
+    public static int inputInt(String message) {
         int number = -1;
         boolean flag = false;
         do {
@@ -28,22 +28,6 @@ public class Validation {
         return number;
     }
 
-    public static int inputNumber(String message, int oldValue) {
-        int number = -1;
-        boolean flag = false;
-        do {
-            System.out.print(message);
-            try {
-                String result = sc.nextLine();
-                if (result.isEmpty())
-                    return oldValue;
-                number = Integer.parseInt(result);
-                if (number < 0) {
-                    throw new Exception();
-                }
-                flag = false;
-    }
-
     public static String inputString(String message, String pattern) {
         String result = null;
         boolean flag = false;
@@ -54,7 +38,7 @@ public class Validation {
                 result = sc.nextLine();
                 if (result.length() == 0)
                     throw new Exception();
-                if (pattern != "" && !result.matches(pattern))
+                if (!"".equals(pattern) && !result.matches(pattern))
                     throw new Exception();
                 flag = false;
             } catch (Exception e) {
@@ -67,38 +51,19 @@ public class Validation {
 
     }
 
-    public static String inputString(String message, String oldValue, String pattern) {
+    public static Boolean confirmYesNo(String message) {
         String result = null;
         boolean flag = false;
         do {
             System.out.print(message);
             try {
                 result = sc.nextLine();
-                if (result.isEmpty())
-                    return oldValue;
-                if (pattern != "" && !result.matches(pattern))
+                if (result.length() == 0)
                     throw new Exception();
-                flag = false;
-            } catch (Exception e) {
-
-                flag = true;
-                System.out.println("Invalid.");
-            }
-        } while (flag);
-        return result;
-
-    }
-
-    public static boolean inputBoolean(String message) {
-        boolean flag = false;
-        do {
-            System.out.print(message);
-            String str = sc.nextLine();
                 if (!result.equalsIgnoreCase("y") && !result.equalsIgnoreCase("n") && !result.equalsIgnoreCase("yes")
                         && !result.equalsIgnoreCase("no"))
                     throw new Exception();
-                results = Boolean.parseBoolean(str);
-                return results;
+                flag = false;
             } catch (Exception e) {
 
                 flag = true;
@@ -108,6 +73,7 @@ public class Validation {
         if (result.equalsIgnoreCase("y") || result.equalsIgnoreCase("yes")) {
             return true;
         } else {
+            return false;
         }
     }
 
