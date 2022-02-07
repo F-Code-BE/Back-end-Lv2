@@ -1,5 +1,6 @@
 package view;
 
+import controller.ChangeGroup;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,6 +23,13 @@ public class Main {
                 do {
 
                     userChoice = menu.getUserChoice();
+                    switch (userChoice) {
+                        case 6:
+                            ChangeGroup.getAllCourses(LogIn.getUserId());
+                            break;
+                        default:
+                            break;
+                    }
                     System.out.println(LogIn.getUserId());
                 } while (userChoice != 11);
             } else if (userCase == 2) {
