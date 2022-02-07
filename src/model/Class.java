@@ -58,4 +58,6 @@ public class Class {
     public void increaseStudent(int number) {
         this.totalStudent += number;
     }
+
+    
 }
