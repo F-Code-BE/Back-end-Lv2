@@ -21,7 +21,6 @@ public class Main {
                 menu.add("Request to ignore attendence");
                 menu.add("Log out");
                 do {
-
                     userChoice = menu.getUserChoice();
                     switch (userChoice) {
                         case 6:
@@ -41,7 +40,6 @@ public class Main {
                 menu.add("Enter marks");
                 menu.add("Log out");
                 do {
-
                     userChoice = menu.getUserChoice();
                     System.out.println(userChoice);
                 } while (userChoice != 7);

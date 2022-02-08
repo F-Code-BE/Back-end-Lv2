@@ -1,8 +1,8 @@
 package controller;
 
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.util.*;
 import Lib.Validation;
 import patterns.Singleton;
@@ -94,15 +94,15 @@ public class ChangeGroup {
         try {
             // show time table
             String courseId = new String();
-            String currentGroupId = new String();
             String classId = new String();
             String groupId = new String();
-            String oldClass = new String();
+            String currentClass = new String();
+            String currentGroupId = new String();
+            Boolean flag = false;
             Vector <TimeTable> timetable = new Vector<TimeTable>();
-            int count = 0;
-            Statement statement = conn.createStatement();
-            String queryString = "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = " + "'" + userId + "'";
-            ResultSet resultSet = statement.executeQuery(queryString);
+            PreparedStatement statement = conn.prepareStatement("SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = ?");
+            statement.setString(1, userId);
+            ResultSet resultSet = statement.executeQuery();
             
             System.out.println("ALL COURSE:");
             while (resultSet.next()) {
@@ -117,17 +117,27 @@ public class ChangeGroup {
             for (TimeTable t : timetable) {
                 System.out.println(t.toString());
             }
-            courseId = inputCourseId();    
-            for (TimeTable t : timetable) {
-                if (t.getCourseId().equals(courseId)) {
-                    currentGroupId = t.getGroupId();
-                    break;
+            do {
+                courseId = inputCourseId();
+                for (TimeTable t : timetable) {
+                    if (t.getCourseId().equals(courseId)) {
+                        currentGroupId = t.getGroupId();
+                        flag = true;
+                        break;
+                    }
                 }
-            }
+                if (!flag) {
+                    System.out.println("There is no courses " + courseId + ". Please try again!");
+                }    
+            } while (!flag);
+
             // show all available classes for the course
-            queryString = "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class c JOIN Slot_type st ON c.id = st.class_id WHERE c.course_id = " + "'" + courseId + "'" +  "AND NOT c.group_id = " + "'" + currentGroupId + "'";
-            resultSet = statement.executeQuery(queryString);
+            statement = conn.prepareStatement("SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class c JOIN Slot_type st ON c.id = st.class_id WHERE c.course_id = ?  AND NOT c.group_id = ?");
+            statement.setString(1, courseId);
+            statement.setString(2, currentGroupId);
+            resultSet = statement.executeQuery();
             Vector<GroupCourse> groupCourse = new Vector<GroupCourse>();
+
             while(resultSet.next()) {
                 GroupCourse groupCourseModel = new GroupCourse();
                 groupCourseModel.setGroupId(resultSet.getString(1));
@@ -137,19 +147,37 @@ public class ChangeGroup {
                 groupCourseModel.setMaxStudent(Integer.parseInt(resultSet.getString(5))); 
                 groupCourse.add(groupCourseModel);
             }
-            
+            if (groupCourse.size() == 0) {
+                throw new Exception("There are no group available for you");
+            }
             System.out.println("ALL GROUP AVAILABLE: ");
             for (GroupCourse gr : groupCourse) {
                 System.out.println(gr.toString());
             }
 
             //Choose group id and check if there was a duplicate
-            groupId = inputGroupId();
             classId =  groupId + "_" + courseId;
-            oldClass = currentGroupId + "_" +courseId;
-            queryString = "SELECT st.id FROM Slot_type st WHERE st.class_id = " + "'" + classId + "'";
-            resultSet = statement.executeQuery(queryString);
+            currentClass = currentGroupId + "_" +courseId;
+            statement = conn.prepareStatement("SELECT st.id FROM Slot_type st WHERE st.class_id = ?");
+            statement.setString(1, classId);
+            resultSet = statement.executeQuery();
+            flag = false;
 
+            // input group 
+            do {
+                groupId = inputGroupId();
+                for (TimeTable time : timetable) {
+                    if (groupId.equals(time.getGroupId())) {
+                        flag = true;
+                    }
+                }
+
+                if (!flag) {
+                    System.out.println("There are no group " + groupId + ". Please try again!");
+                }
+            } while (!flag);
+
+            //Check is there duplicated? 
             while(resultSet.next()) {
                 String slotType =  new String(resultSet.getString(1));
                 for (TimeTable time : timetable) {
@@ -160,11 +188,14 @@ public class ChangeGroup {
             }
             
             // update new class to class table
-            queryString = "UPDATE Class_student SET class_id = '" + classId + "' WHERE student_id = '" + userId + "' AND class_id = '" + oldClass + "'";
-            statement.executeUpdate(queryString);
+            statement = conn.prepareStatement("UPDATE Class_student SET class_id = ? WHERE student_id = ? AND class_id = ?");
+            statement.setString(1, classId);
+            statement.setString(2, userId);
+            statement.setString(3, currentClass);
+            statement.executeUpdate();
             System.out.println("Successfully change");
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
     public static void main(String[] args) {
