@@ -23,8 +23,15 @@ SELECT *
 FROM slot s 
 WHERE s.class_id = 'SE1601_PRF192';
 
+SELECT id
+FROM slot
+WHERE class_id = 'SE1601_PRF192' AND teacher_id ='PHUOC01';
+
 DELETE FROM Attendance 
 WHERE student_id = 'SE160001' AND slot_id LIKE 'SE1601_PRF192%';
 
 INSERT Attendance (student_id, slot_id, status)
 VALUES ('SE160001', 'SE1602_PRF192_2305_22', 'NOT YET');
+
+SELECT *
+FROM Attendance;
