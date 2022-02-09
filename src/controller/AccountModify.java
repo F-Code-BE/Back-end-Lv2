@@ -9,6 +9,7 @@ import java.lang.Integer;
 
 import patterns.Singleton;
 import model.Student;
+import model.Teacher;
 import Lib.Validation;
 import Lib.Regex;
 
@@ -30,13 +31,15 @@ public class AccountModify {
         return result;
     }
     public static void addingAccount(String type) { 
+        Connection conn = Singleton.getInstance();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        String lastID = null;
+
         try {
             if (type.equals("student")) {
                 Student student = new Student();
-                Connection conn = Singleton.getInstance();
-                PreparedStatement statement = conn.prepareStatement("SELECT TOP 1 * FROM Student WHERE major_id = ? ORDER BY id DESC");
-                ResultSet resultSet = null;
-                String lastID = null;
+                statement = conn.prepareStatement("SELECT TOP 1 * FROM Student WHERE major_id = ? ORDER BY id DESC");
                 
                 // input object 
                 student.setName(Validation.inputString("Enter student name: ", ""));
@@ -47,21 +50,60 @@ public class AccountModify {
                 // find the last student in table
                 statement.setString(1, student.getMajorID());
                 resultSet = statement.executeQuery();
-                resultSet.next();
-                lastID = resultSet.getString(1);
+                if (resultSet.next()) {
+                    lastID = resultSet.getString(1);
+                } else {
+                    lastID = "160000";
+                }
                 System.out.println(lastID);
                 // generate id
                 student.setId(generateId(lastID, student.getMajorID(), "\\d+"));
                 
+                // insert to sql 
+                statement = conn.prepareStatement("INSERT INTO student VALUES (?, ?, ?, ?, ?, ?)");
+                statement.setString(1, student.getId());
+                statement.setString(2, student.getName());
+                statement.setString(3, Validation.convertDateFormat(student.getDateOfBirth(), Regex.DATE_PATTERN));
+                statement.setString(4, "1234");
+                statement.setString(5, student.getMail());
+                statement.setString(6, student.getMajorID());
+                statement.executeUpdate();
+                System.out.println("Successful change");
                 // check information
-                System.out.println("======== Student information =========");
-                System.out.println(student.toString());
+            //     System.out.println("======== Student information =========");
+            //     System.out.println(student.toString());
+
+            //     System.out.println();
+            } else {
+                Teacher teacher = new Teacher();
+                String[] partsName;
+                String lastName = null;
+                // input 
+                teacher.setName(Validation.inputString("Enter name: ", ""));
+                teacher.setMail(Validation.inputString("Enter mail: ", Regex.EMAIL_PATTERN));
+                
+                // find the last id 
+                partsName = teacher.getName().split(" ");
+                lastName = partsName[partsName.length - 1];
+
+                statement = conn.prepareStatement("SELECT TOP 1 * FROM Teacher WHERE id LIKE ? ORDER BY id DESC");
+                statement.setString(1, lastName + "%");
+                resultSet = statement.executeQuery();
+                if (resultSet.next()){
+                    lastID = resultSet.getString(1);
+                } else {
+                    lastID = "0";
+                }
+                //generate Id
+                teacher.setId(generateId(lastID, lastName, "\\d+"));
+                statement = conn.prepareStatement("SELECT TOP 1 * FROM Teacher WHERE id LIKE ? ORDER BY id DESC");
+                statement.setString(1, lastName + "%");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
     public static void main(String[] args) {
-        addingAccount("student");
+        addingAccount("teacher");
     }
 }
