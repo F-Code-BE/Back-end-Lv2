@@ -164,7 +164,7 @@ public class Validation {
 
     public static Date inputDate(String message) {
         boolean check = true;
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         do {
             try {
