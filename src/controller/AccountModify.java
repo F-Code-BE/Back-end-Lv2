@@ -96,8 +96,16 @@ public class AccountModify {
                 }
                 //generate Id
                 teacher.setId(generateId(lastID, lastName, "\\d+"));
-                statement = conn.prepareStatement("SELECT TOP 1 * FROM Teacher WHERE id LIKE ? ORDER BY id DESC");
-                statement.setString(1, lastName + "%");
+                
+                // Insert to table
+                statement = conn.prepareStatement("INSERT INTO Teacher VALUES (?, ?, ?, ?)");
+                statement.setString(1, teacher.getId());
+                statement.setString(2, teacher.getName());
+                statement.setString(3, teacher.getMail());
+                statement.setString(4, "1234");
+                statement.executeUpdate();
+
+                System.out.println("Successful change");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
