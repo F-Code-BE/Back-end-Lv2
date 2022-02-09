@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Date;
+import Lib.*;
 
 public class Student {
 
@@ -67,4 +68,16 @@ public class Student {
     public void setMajorID(String majorID) {
         this.majorID = majorID;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", name='" + getName() + "'" +
+            ", dateOfBirth='" + Validation.convertDateFormat(getDateOfBirth(), Regex.DATE_PATTERN) + "'" +
+            ", mail='" + getMail() + "'" +
+            ", majorID='" + getMajorID() + "'" +
+            "}";
+    }
+
 }

@@ -162,7 +162,7 @@ public class Validation {
         return number;
     }
 
-    public static String inputDate(String message, String pattern) {
+    public static Date inputDate(String message, String pattern) {
         Date dateResult = null;
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         boolean flag = false;
@@ -178,7 +178,17 @@ public class Validation {
 
         } while (flag);
 
-        return formatter.format(dateResult);
+        return dateResult;
     }
-
+    
+    public static String convertDateFormat(Date date, String pattern) {
+        String dateResult = null;
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            dateResult = formatter.format(date);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return dateResult;
+    }
 }
