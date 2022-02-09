@@ -162,23 +162,22 @@ public class Validation {
         return number;
     }
 
-    public static String inputDate(String message, String pattern) {
-        Date dateResult = null;
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        boolean flag = false;
+    public static Date inputDate(String message) {
+        boolean check = true;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
         do {
-            System.out.print(message);
             try {
-                dateResult = formatter.parse(sc.nextLine());
-                flag = false;
+                Scanner sc = new Scanner(System.in);
+                System.out.print(message);
+                String tmp = sc.nextLine();
+                date = formatter.parse(tmp);
+                check = false;
             } catch (Exception e) {
-                System.out.println("Invalid.");
-                flag = true;
+                System.out.println("Input date!!!");
             }
-
-        } while (flag);
-
-        return formatter.format(dateResult);
+        } while (check);
+        return date;
     }
 
 }
