@@ -14,6 +14,49 @@ import Lib.Validation;
 import Lib.Regex;
 
 public class AccountModify {
+
+    // =======================  functions
+    public static void deleteAccountStatement(String table, String id) {
+        Connection conn = Singleton.getInstance();
+        String query = "DELETE FROM " + table + " WHERE id = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, id);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // input id 
+    public static String inputId(String type) {
+        Connection conn = Singleton.getInstance();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean flag = false;
+        String id = null;
+
+        try {
+            do {
+                id = Validation.inputString("Enter Id: ", "");
+                statement = conn.prepareStatement("SELECT * FROM " + type);
+                resultSet = statement.executeQuery();
+                // check if the id existed
+                while (resultSet.next()) {
+                    if (resultSet.getString(1).equals(id)) {
+                        flag = true;
+                    }
+                }
+                
+                if (!flag) {
+                    System.out.println("Id not found. Please try again!");
+                }
+            }   while (!flag);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return id;
+    }
     
     public static String generateId(String preId, String prefix, String patterns) {
         Pattern p = Pattern.compile(patterns);
@@ -30,12 +73,15 @@ public class AccountModify {
         result += Integer.toString(number);
         return result;
     }
-    public static void addingAccount(String type) { 
+
+    // =======================  main features
+    public static void addingAccount() { 
         Connection conn = Singleton.getInstance();
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         String lastID = null;
 
+        String type = Validation.inputString("Enter role (teacher, student): ", "teacher|student");
         try {
             if (type.equals("student")) {
                 Student student = new Student();
@@ -69,11 +115,6 @@ public class AccountModify {
                 statement.setString(6, student.getMajorID());
                 statement.executeUpdate();
                 System.out.println("Successful change");
-                // check information
-            //     System.out.println("======== Student information =========");
-            //     System.out.println(student.toString());
-
-            //     System.out.println();
             } else {
                 Teacher teacher = new Teacher();
                 String[] partsName;
@@ -111,7 +152,15 @@ public class AccountModify {
             System.out.println(e.getMessage());
         }
     }
-    public static void main(String[] args) {
-        addingAccount("teacher");
+
+    public static void deleteAccount() {
+        String type = Validation.inputString("Enter role (teacher, student): ", "teacher|student");
+        try {
+            String id = inputId(type);
+            deleteAccountStatement(type, id);
+            System.out.println("Successful change");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
