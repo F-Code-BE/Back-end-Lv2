@@ -50,7 +50,14 @@ public class CheckAttendence {
         var menu = new FapMenu();
         for (int i = 0; i < slots.size(); i++)
             menu.add(classIds.get(i) + " Slot: " + slots.get(i));
-        int userChoice = menu.getUserChoice();
+        int userChoice;
+        do {
+            userChoice = menu.getUserChoice();
+            if (userChoice > menu.size() || userChoice < menu.size()) {
+                System.out.println("Please enter valid number!");
+            }
+        }
+        while (userChoice > menu.size() || userChoice < menu.size());
         classId = classIds.get(userChoice - 1);
         slot = slots.get(userChoice - 1);
         slotId = slotIds.get(userChoice - 1);
@@ -75,6 +82,7 @@ public class CheckAttendence {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
     }
 
     private void getDates() {
@@ -110,7 +118,7 @@ public class CheckAttendence {
         Connection conn = Singleton.getInstance();
         while (true) {
             absentStudent = Validation.inputString("Enter student id of absent student(0 to finish): ",
-                    "^SE[0-9]{6}$|^se[0-9]{6}$|^0$");
+                    "^SE[0-9]{6}$|^se[0-9]{6}$|^0$|^Se[0-9]{6}|^sE[0-9]{6}");
             absentStudent = absentStudent.toUpperCase();
             if (absentStudent.equals("0"))
                 break;
