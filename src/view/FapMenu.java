@@ -20,7 +20,7 @@ public class FapMenu extends Vector<String> {
             System.out.println(i + ". " + option);
             i++;
         }
-        return Validation.inputNumber("Enter your choice: ");
+        return Validation.inputInt("Enter your choice: ");
     }
 
 }
