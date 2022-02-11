@@ -89,7 +89,7 @@ public class AccountModify {
                 
                 // input object 
                 student.setName(Validation.inputString("Enter student name: ", ""));
-                student.setDateOfBirth(Validation.inputDate("Enter date of birth (yyyy-mm-dd): ", Regex.DATE_PATTERN));
+                student.setDateOfBirth(Validation.inputDate("Enter date of birth (dd/mm/yyyy): "));
                 student.setMail(Validation.inputString("Enter email: ", Regex.EMAIL_PATTERN));
                 student.setMajorID(Validation.inputString("Enter Major: ", ""));
 

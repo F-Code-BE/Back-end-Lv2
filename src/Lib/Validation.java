@@ -114,4 +114,15 @@ public class Validation {
         } while (check);
         return date;
     }
+
+    public static String convertDateFormat(Date date, String pattern) {
+        String dateResult = null;
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            dateResult = formatter.format(date);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return dateResult;
+    }
 }
