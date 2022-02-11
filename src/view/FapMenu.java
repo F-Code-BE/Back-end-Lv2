@@ -15,13 +15,12 @@ public class FapMenu extends Vector<String> {
     // Print main menu and get user's choice>
     public int getUserChoice() {
         int i = 1;
-        System.out.println("\n------------------------------");
-        System.out.println("   MENU");
+        System.out.println("");
         for (String option : this) {
             System.out.println(i + ". " + option);
             i++;
         }
-        return Validation.inputNumber("Enter your choice: ");
+        return Validation.inputInt("Enter your choice: ");
     }
 
 }
