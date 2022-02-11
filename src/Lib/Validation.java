@@ -114,26 +114,4 @@ public class Validation {
         } while (check);
         return date;
     }
-<<<<<<< HEAD
-=======
-
-    public static Date inputDate(String message) {
-        boolean check = true;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        do {
-            try {
-                Scanner sc = new Scanner(System.in);
-                System.out.print(message);
-                String tmp = sc.nextLine();
-                date = formatter.parse(tmp);
-                check = false;
-            } catch (Exception e) {
-                System.out.println("Input date!!!");
-            }
-        } while (check);
-        return date;
-    }
-
->>>>>>> 52eea860469a0987118a8498d173d1d465b4f4b1
 }
