@@ -1,6 +1,7 @@
 package view;
 
 import controller.ChangeGroup;
+import controller.AccountModify;
 import controller.CheckAttendence;
 
 public class Main {
@@ -24,14 +25,15 @@ public class Main {
                 menu.add("Log out");
                 do {
                     userChoice = menu.getUserChoice();
+                    System.out.println(LogIn.getUserId());  
                     switch (userChoice) {
-                        case 6:
+                        case 7:
                             ChangeGroup.getAllCourses(LogIn.getUserId());
                             break;
                         default:
                             break;
                     }
-                    System.out.println(LogIn.getUserId());
+                   
                 } while (userChoice != 11);
             } else if (userCase == 2) {
                 menu.add("View timetable");
@@ -60,9 +62,17 @@ public class Main {
                 menu.add("Update information base on request");
                 menu.add("Log out");
                 do {
-
                     userChoice = menu.getUserChoice();
-                    System.out.println(userChoice);
+                    switch (userChoice) {
+                        case 1: 
+                            AccountModify.addingAccount();
+                            break;
+                        case 2:
+                            AccountModify.deleteAccount();
+                            break;  
+                        default:
+                            break;
+                    }
                 } while (userChoice != 4);
             }
         }
