@@ -1,9 +1,11 @@
 package view;
 
 import controller.ChangeGroup;
+import controller.CheckAttendence;
 
 public class Main {
     public static void main(String[] args) {
+
         while (true) {
             int userCase = LogIn.logIn();
             var menu = new FapMenu();
@@ -41,7 +43,15 @@ public class Main {
                 menu.add("Log out");
                 do {
                     userChoice = menu.getUserChoice();
-                    System.out.println(userChoice);
+                    switch (userChoice) {
+                        case 2:
+                            var checkAttendence = new CheckAttendence(LogIn.getUserId());
+                            checkAttendence.showMenu();
+                            break;
+
+                        default:
+                            break;
+                    }
                 } while (userChoice != 7);
 
             } else if (userCase == 3) {
