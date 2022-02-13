@@ -29,31 +29,37 @@ public class InputMark {
     }
 
     public void inputClassId() {
-        boolean flag = true;
-
         do {
             classId = Validation.inputString("Enter Class id: ", "");
             // check if that classid existed
             if (classes.contains(classId)) {
-                flag = false;
                 return;
             }
             System.out.println("Invalid Id. Please enter again!");
-        } while (flag);
+        } while (true);
     }
 
     public void inputStudentId() {
-        boolean flag = true;
-
         do {
             studentId = Validation.inputString("Enter student id: ", "");
             // check if that classid existed
             if (students.contains(studentId)) {
-                flag = false;
                 return;
             }
             System.out.println("Invalid Id. Please enter again!");
-        } while (flag);
+        } while (true);
+    }
+
+    public double inputStudentMark() {
+        double result = 0;
+        do {
+            result = Validation.inputFloat("Enter gpa: ");
+            // validate result
+            if (result <= 10) {
+                return result;
+            }
+            System.out.println("Invalid Mark. Please enter again!");
+        } while (true);
     }
 
     public Vector<String> getData(String query, String... params) {
@@ -143,7 +149,7 @@ public class InputMark {
         query = "SELECT gpa FROM Mark WHERE student_id = ?";
         marks = getData(query, studentId);
         // get all mark of a student
-        gpa = Validation.inputFloat("Enter gpa: ");
+        gpa = inputStudentMark();
         status = checkStatus(gpa);
         // check if the student had marks yet.
         if (marks.size() == 0) {
