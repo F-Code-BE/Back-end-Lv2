@@ -1,0 +1,166 @@
+package controller;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Vector;
+
+import Lib.Validation;
+import Lib.Regex;
+import patterns.Singleton;
+
+public class InputMark {
+    private Connection conn;
+    private PreparedStatement statement;
+    private ResultSet resultSet;
+    private String userId;
+    private String classId;
+    private String studentId;
+    // TODO: using model for this
+    Vector<String> classes = new Vector<String>();
+    Vector<String> students = new Vector<String>();
+    Vector<String> studentMarks = new Vector<String>();
+    public InputMark() {}
+    
+    public InputMark(String userId) {
+        this.userId = userId;
+    }
+
+    public void inputClassId() {
+        boolean flag = true;
+        do {
+            classId = Validation.inputString("Enter Class id: ", "");
+            // check if that classid existed
+            if (classes.contains(classId)) {
+                flag = false;
+                return;
+            }
+            System.out.println("Invalid Id. Please enter again!");
+        } while (flag);        
+    }
+
+    public void inputStudentId() {
+        boolean flag = true;
+        do {
+            studentId = Validation.inputString("Enter student id: ", "");
+            // check if that classid existed
+            if (students.contains(studentId)) {
+                flag = false;
+                return;
+            }
+            System.out.println("Invalid Id. Please enter again!");
+        } while (flag);
+    }
+
+    public Vector<String> getData(String query, String ...params) {
+        conn = Singleton.getInstance();
+        Vector<String> result = new Vector<String>();
+        try {
+            statement = conn.prepareStatement(query);
+            for (int i = 0; i < params.length; i++) {
+                statement.setString(i + 1, params[i]);
+            }
+            resultSet = statement.executeQuery();
+            
+            while (resultSet.next()) {
+                result.add(resultSet.getString(1));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    public void executeUpdateData(String query, String... params) {
+        conn = Singleton.getInstance();
+        
+        try {
+            statement = conn.prepareStatement(query);
+            for (int i = 0; i < params.length; i++) {
+
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void printClasses(){
+        String query = "SELECT DISTINCT c.id FROM slot s JOIN Class c on s.class_id = c.id WHERE s.teacher_id = ?";
+        classes = getData(query, userId);
+
+        System.out.println("All class: ");
+        for (String id : classes) {
+            System.out.println(id);
+        }
+    }
+
+    public void printStudents(){
+        String query = "SELECT student_id FROM Class_student WHERE class_id = ?";
+        students = getData(query, classId);
+
+        System.out.println("All students: ");
+        for (String id : students) {
+            System.out.println(id);
+        }
+    }
+
+    public String checkStatus(Double gpa) {
+        Vector<String> attendances = new Vector<String>();
+
+        if (gpa < 5) {
+            return "Not Pass";
+        }
+        // get all attendances 
+        try {
+            int absentCounter = 0;
+            String query = "SELECT a.status, s.date FROM Attendance a JOIN slot s ON a.slot_id = s.id JOIN Class c ON c.id = s.class_id WHERE a.student_id = ? AND c.id = ?";
+            attendances = getData(query, studentId, classId);
+            for (String slot : attendances) {
+                absentCounter += slot.equals("absent") ? 1 : 0;
+            }
+            if (absentCounter > 3) { 
+                return "Not Pass";
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return "Pass";
+    }
+
+    public void updateMark() {
+        Vector<String> marks = new Vector<String>();
+        String query = new String();
+        Double gpa = 0;
+        String status;
+
+        // get data
+        query = "SELECT gpa FROM Mark WHERE student_id = ?";
+        marks = getData(query, studentId);
+        // get all mark of a student
+        gpa = Validation.inputFloat("Enter gpa:");
+        status = checkStatus(gpa);
+        // TODO: check if the student had marks yet.
+        if (marks.size() == 0) {
+            query = "INSERT INTO Mark VALUES (?, ?, ?, ?)";
+        }
+    }   
+    // main section 
+    public void inputMark() { 
+        // print all available class
+        printClasses();   
+        //input class
+        inputClassId();
+        //print all student in that class
+        printStudents();
+        //input student id
+        inputStudentId();
+        //Update new mark
+        updateMark();
+    }
+
+    public static void main(String[] args) {
+        InputMark inputMark = new InputMark("Hoa01");       
+        inputMark.inputMark(); 
+    }
+}
