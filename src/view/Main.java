@@ -1,8 +1,6 @@
 package view;
 
-import controller.ChangeGroup;
-import controller.AccountModify;
-import controller.CheckAttendence;
+import controller.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -37,7 +35,7 @@ public class Main {
                 } while (userChoice != 11);
             } else if (userCase == 2) {
                 menu.add("View timetable");
-                menu.add("Check attendence");
+                menu.add("Check attendance");
                 menu.add("Change information");
                 menu.add("Change subject");
                 menu.add("Change slot");
@@ -50,7 +48,9 @@ public class Main {
                             var checkAttendence = new CheckAttendence(LogIn.getUserId());
                             checkAttendence.showMenu();
                             break;
-
+                        case 6:
+                            var inputMark = new InputMark(LogIn.getUserId());
+                            inputMark.showMenu();
                         default:
                             break;
                     }
