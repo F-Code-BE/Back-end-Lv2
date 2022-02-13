@@ -8,7 +8,7 @@ SELECT * FROM Class_student WHERE class_id = 'SE1601_PRF192';
 SELECT * FROM Mark WHERE student_id = 'SE160002';
 
 -- if the student didn't have mark
--- INSERT INTO Mark VALUES ('SE1601_PRF192', 'SE160002', 7, 'pass');
+INSERT INTO Mark VALUES ('SE1601_PRF192', 'SE160001 ', 7, 'pass');
 
 -- If the student already had mark
 UPDATE Mark SET gpa = '6.5', status = 'PASS' WHERE student_id = 'SE160002';
