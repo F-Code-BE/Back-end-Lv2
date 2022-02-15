@@ -85,7 +85,7 @@ public class ViewInfo {
             }
             int userChoice;
             do {
-                userChoice = Validation.inputNumber("Please enter your choice: ");
+                userChoice = Validation.inputInt("Please enter your choice: ");
                 if (userChoice > classIds.size() || userChoice < classIds.size()) {
                     System.out.println("Please enter valid number!");
                 }
