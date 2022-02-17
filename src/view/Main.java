@@ -19,7 +19,7 @@ public class Main {
                 menu.add("Change group");
                 menu.add("Suspend one semester");
                 menu.add("Change information");
-                menu.add("Request to ignore attendence");
+                menu.add("Request");
                 menu.add("Log out");
                 do {
                     userChoice = menu.getUserChoice();
@@ -28,6 +28,9 @@ public class Main {
                         case 7:
                             ChangeGroup.getAllCourses(LogIn.getUserId());
                             break;
+                        case 10:
+                            StudentRequest request = new StudentRequest(LogIn.getUserId());
+                            request.showMenu();
                         default:
                             break;
                     }

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Vector;
-import java.util.Date;
 
 import model.Student;
 import view.FapMenu;
@@ -14,15 +13,15 @@ import patterns.Singleton;
 
 public class StudentRequest {
 
-    private Student user;
-    private String name;
-    private String email;
-    private Date dateOfBirth;
+    private Student user = new Student();
     private String majorId;
     private Connection conn;
     private PreparedStatement statement;
     private ResultSet resultSet;
 
+    public StudentRequest(String id) {
+        user.setId(id);
+    }
     // get data using query string 
     public Vector<String> executeDb(String type, String query, String... params) {
         conn = Singleton.getInstance();
@@ -196,8 +195,7 @@ public class StudentRequest {
 
     }
     
-    public static void main(String[] args) {
-        StudentRequest test = new StudentRequest();
+    public void showMenu() {
         int choice = 0;
         FapMenu menu = new FapMenu();
 
@@ -209,16 +207,16 @@ public class StudentRequest {
             choice = menu.getUserChoice();
             switch (choice) {
                 case 1:
-                    test.changeInfo();
+                    changeInfo();
                     break;
                 case 2:
-                    test.retake();
+                    retake();
                     break;
                 case 3:
-                    test.checkAttendance();
+                    checkAttendance();
                     break;
                 case 4:
-                    test.alterClass();
+                    alterClass();
                 default:
                     break;
             }
