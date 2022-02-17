@@ -86,10 +86,10 @@ public class ViewInfo {
             int userChoice;
             do {
                 userChoice = Validation.inputInt("Please enter your choice: ");
-                if (userChoice > classIds.size() || userChoice < classIds.size()) {
+                if (userChoice > classIds.size()) {
                     System.out.println("Please enter valid number!");
                 }
-            } while (userChoice > classIds.size() || userChoice < classIds.size());
+            } while (userChoice > classIds.size());
 
             // get all slot of class
             statement = conn.prepareStatement(
@@ -160,6 +160,6 @@ public class ViewInfo {
 
     public static void main(String[] args) {
         ViewInfo viewInfo = new ViewInfo();
-        viewInfo.viewTimetable("SE160001");
+        viewInfo.viewAttendance("SE160001");
     }
 }
