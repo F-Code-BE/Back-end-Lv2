@@ -22,7 +22,8 @@ public class StudentRequest {
     private Connection conn;
     private PreparedStatement statement;
     private ResultSet resultSet;
-    
+
+    // get data using query string 
     public Vector<String> executeDb(String type, String query, String... params) {
         conn = Singleton.getInstance();
         Vector<String> result = new Vector<String>();
@@ -110,9 +111,14 @@ public class StudentRequest {
         for (String course : courseList) {
             menu.add(course);
         }
-        choice = menu.getUserChoice();
-        
-        sendData("2", user.getId(), null, "couresId=" + courseList.get(choice - 1));
+        do {
+            choice = menu.getUserChoice();
+            choice--;
+            if (choice >= courseList.size()) {
+                System.out.println("Wrong input, please try again!");
+            }
+        } while (choice >= courseList.size());
+        sendData("2", user.getId(), null, "couresId=" + courseList.get(choice));
         System.out.println("Request successful");
     }
 
@@ -129,12 +135,67 @@ public class StudentRequest {
         for (String slot : slots) {
             menu.add(slot);
         }
-        choice = menu.getUserChoice();
-
+        do {
+            choice = menu.getUserChoice();
+            choice--;
+            if (choice >= slots.size()) {
+                System.out.println("Wrong input, please try again!");
+            }
+        } while (choice >= slots.size());
         sendData("3", user.getId(), null, "slotId=" + slots.get(choice));
         System.out.println("Request successful");
     }
 
+    public void alterClass() {
+        user = new Student();
+        user.setId("SE160001");
+        int choice = 0;
+        String courseId;
+        String classId;
+        FapMenu menu = new FapMenu();
+        Vector<String> classes = new Vector<String>();
+        Vector<String> courseList = new Vector<String>();
+
+        // get all class are available
+        String query = "SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = ?";
+        courseList = executeDb("query", query, user.getId());
+        // input course to show all class
+        
+        System.out.println("choose a course: ");
+        for (String course : courseList) {
+            menu.add(course);
+        }
+        do {
+            choice = menu.getUserChoice();
+            choice--;
+            if (choice >= courseList.size()) {
+                System.out.println("Wrong input, please try again!");
+            }
+        } while (choice >= courseList.size());
+        courseId = courseList.get(choice);
+
+        //check all classes
+        menu = new FapMenu();
+        query = "SELECT c.id, st.id, st.teacher_id FROM Slot_type st JOIN class c ON c.id = st.class_id WHERE c.course_id = ?";
+        classes = executeDb("query", query, courseId);
+        System.out.println("Choose class id");
+        for (String classElement : classes) {
+            menu.add(classElement);
+        }
+        do {
+            choice = menu.getUserChoice();
+            choice--;
+            if (choice >= classes.size()) {
+                System.out.println("Wrong input, please try again!");
+            }
+        } while (choice >= classes.size());
+        classId = classes.get(choice);
+
+        sendData("4", user.getId(), null, "classid=" + classId);
+        System.out.println("Request successful");
+
+    }
+    
     public static void main(String[] args) {
         StudentRequest test = new StudentRequest();
         int choice = 0;
@@ -156,6 +217,8 @@ public class StudentRequest {
                 case 3:
                     test.checkAttendance();
                     break;
+                case 4:
+                    test.alterClass();
                 default:
                     break;
             }
