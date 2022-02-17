@@ -134,8 +134,7 @@ public class ChangeGroup {
                 for (TimeTable t : timetable) {
                     if (t.getCourseId().equals(courseId)) {
                         currentGroupId = t.getGroupId();
-                        flag = true;
-                        break;
+                        flag = true;                                                                                  
                     }
                 }
                 if (!flag) {

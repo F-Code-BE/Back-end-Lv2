@@ -115,10 +115,36 @@ public class Validation {
         return date;
     }
 
+    public static Date inputDate(String message, boolean isNull) {
+        boolean check = true;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        do {
+            try {
+                Scanner sc = new Scanner(System.in);
+                System.out.print(message);
+                String tmp = sc.nextLine();
+                // if this is null then return
+                if (tmp.equals("null")) {
+                    return null;
+                }
+                date = formatter.parse(tmp);
+                check = false;
+            } catch (Exception e) {
+                System.out.println("Input date!!!");
+            }
+        } while (check);
+        formatter = Regex.DATE_FORMATTER;
+        return date;
+    }
+
     public static String convertDateFormat(Date date, String pattern) {
         String dateResult = null;
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {
+            if (date == null) {
+                return "null";
+            }
             dateResult = formatter.format(date);
         } catch (Exception e){
             System.out.println(e.getMessage());
