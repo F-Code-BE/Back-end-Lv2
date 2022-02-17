@@ -97,6 +97,44 @@ public class StudentRequest {
         System.out.println("Request Successful");
     }
 
+    public void retake() {
+        user = new Student();
+        user.setId("SE160001");
+        int choice = 0;
+        FapMenu menu = new FapMenu();
+        String query = "SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = ?";
+        Vector<String> courseList = new Vector<String>();
+        courseList = executeDb("query", query, user.getId());
+        
+        System.out.println("choose a course: ");
+        for (String course : courseList) {
+            menu.add(course);
+        }
+        choice = menu.getUserChoice();
+        
+        sendData("2", user.getId(), null, "couresId=" + courseList.get(choice - 1));
+        System.out.println("Request successful");
+    }
+
+    public void checkAttendance() {
+        user = new Student();
+        user.setId("SE160001");
+        int choice = 0;
+        FapMenu menu = new FapMenu();
+        String query = " SELECT slot_id from Attendance";
+        Vector <String> slots = new Vector <String>();
+        slots = executeDb("query", query);
+
+        System.out.println("Choose slot Id: ");
+        for (String slot : slots) {
+            menu.add(slot);
+        }
+        choice = menu.getUserChoice();
+
+        sendData("3", user.getId(), null, "slotId=" + slots.get(choice));
+        System.out.println("Request successful");
+    }
+
     public static void main(String[] args) {
         StudentRequest test = new StudentRequest();
         int choice = 0;
@@ -111,6 +149,12 @@ public class StudentRequest {
             switch (choice) {
                 case 1:
                     test.changeInfo();
+                    break;
+                case 2:
+                    test.retake();
+                    break;
+                case 3:
+                    test.checkAttendance();
                     break;
                 default:
                     break;

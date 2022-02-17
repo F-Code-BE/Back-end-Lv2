@@ -1,0 +1,1 @@
+SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = 'SE160001';
