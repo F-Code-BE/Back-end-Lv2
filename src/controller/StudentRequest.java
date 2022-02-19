@@ -131,9 +131,7 @@ public class StudentRequest {
         slots = executeDb("query", query);
 
         System.out.println("Choose slot Id: ");
-        for (String slot : slots) {
-            menu.add(slot);
-        }
+        slots.forEach( (slot) -> menu.add(slot));
         do {
             choice = menu.getUserChoice();
             choice--;
