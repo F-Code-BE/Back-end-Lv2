@@ -4,21 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Singleton {
+
     private static Connection instance;
 
-    private Singleton() {
-        String DB_URL = "jdbc:sqlserver://fapdb.database.windows.net:1433;database=fapdb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-        String USER_NAME = "fapdb@fapdb";
-        String PASSWORD = "F@pdb1234";
-        instance = getConnection(DB_URL, USER_NAME, PASSWORD);
-    }
 
     public static Connection getInstance() {
         if (instance == null) {
-            new Singleton();
+            String DB_URL = "jdbc:sqlserver://fapdb.database.windows.net:1433;database=fapdb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+            String USER_NAME = "fapdb@fapdb";
+            String PASSWORD = "F@pdb1234";
+            instance = getConnection(DB_URL, USER_NAME, PASSWORD);
             return instance;
-        } else
+        } else {
             return instance;
+        }
 
     }
 
