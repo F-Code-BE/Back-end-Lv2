@@ -7,17 +7,19 @@ public class Request {
     private String studentId;
     private String teacherId;
     private byte type;
-    private Date date;
+    private String message;
+    private String status;
 
     public Request() {
     }
 
-    public Request(String requestId, String studentId, String teacherId, byte type, Date date) {
+    public Request(String requestId, String studentId, String teacherId, byte type, String message, String status) {
         this.requestId = requestId;
         this.studentId = studentId;
         this.teacherId = teacherId;
         this.type = type;
-        this.date = date;
+        this.message = message;
+        this.status = status;
     }
 
     public String getRequestId() {
@@ -36,8 +38,12 @@ public class Request {
         return type;
     }
 
-    public Date getDate() {
-        return date;
+    public String getMessage() {
+        return message;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setRequestId(String requestId) {
@@ -56,7 +62,12 @@ public class Request {
         this.type = type;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setMessage(String message) {
+        this.message = message;
+    } 
+
+    public void setStatus(String status) {
+        this.status = status;
+        
     }
 }
