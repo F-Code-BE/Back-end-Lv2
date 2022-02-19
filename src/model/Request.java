@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.Date;
 
 public class Request {
     private String requestId;
@@ -68,6 +67,6 @@ public class Request {
 
     public void setStatus(String status) {
         this.status = status;
-        
+
     }
 }
