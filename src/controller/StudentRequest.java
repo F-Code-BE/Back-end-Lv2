@@ -93,7 +93,7 @@ public class StudentRequest {
         user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyyy or null to skip): ", true));
         user.setMajorID(getMajorId());
         // save to table 
-        sendData("1", user.getId(), null, user.toString());
+        sendData("1", user.getId(), null, user.toString2());
         System.out.println("Request Successful");
     }
 

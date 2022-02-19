@@ -14,7 +14,7 @@ public class Main {
             if (userCase == 1) {
                 menu.add("View information");
                 menu.add("View curriculum");
-                menu.add("View attendence report");
+                menu.add("View attendance report");
                 menu.add("View academic transcript");
                 menu.add("View Timetable");
                 menu.add("Change group");
@@ -22,7 +22,6 @@ public class Main {
                 menu.add("Log out");
                 do {
                     ViewInfo viewInfo = new ViewInfo();
-                    StudentRequest studentRequest = new StudentRequest(userID);
                     userChoice = menu.getUserChoice();
                     System.out.println(userID);
                     
