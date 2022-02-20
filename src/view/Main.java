@@ -5,7 +5,7 @@ import controller.*;
 public class Main {
 
     public static void main(String[] args) {
-
+       
         while (true) {
             int userCase = LogIn.logIn();
             var menu = new FapMenu();
@@ -14,17 +14,19 @@ public class Main {
             if (userCase == 1) {
                 menu.add("View information");
                 menu.add("View curriculum");
-                menu.add("View attendance report");
+                menu.add("View attendence report");
                 menu.add("View academic transcript");
                 menu.add("View Timetable");
                 menu.add("Change group");
-                menu.add("Request");
+                menu.add("Suspend one semester");
+                menu.add("Change information");
+                menu.add("Request to ignore attendence");
                 menu.add("Log out");
                 do {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
                     System.out.println(userID);
-
+                    
                     switch (userChoice) {
                         case 1:
                             viewInfo.viewStudentInfo(userID);
@@ -44,14 +46,14 @@ public class Main {
                         case 6:
                             ChangeGroup.getAllCourses(userID);
                             break;
-                        case 7:
-                            StudentRequest request = new StudentRequest(LogIn.getUserId());
-                            request.showMenu();
+                        case 8:
+                            var request = new StudentRequest(userID);
+                            request.changeInfo();
                         default:
                             break;
                     }
 
-                } while (userChoice != 8);
+                } while (userChoice != 10);
             } else if (userCase == 2) {
                 menu.add("View Timetable");
                 menu.add("Check attendance");
@@ -89,6 +91,8 @@ public class Main {
                         case 2:
                             AccountModify.deleteAccount();
                             break;
+                        case 3: 
+                            HandleRequest.showMenu();
                         default:
                             break;
                     }

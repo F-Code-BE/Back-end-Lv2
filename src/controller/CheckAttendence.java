@@ -103,9 +103,10 @@ public class CheckAttendence {
     private void checkPresent() {
         Connection conn = Singleton.getInstance();
         try {
-            PreparedStatement stmt = conn.prepareStatement("update attendance set status = ? where slot_id = ?");
+            PreparedStatement stmt = conn.prepareStatement("update attendance set status = ? where slot_id = ? and status = ?");
             stmt.setString(1, "PRESENT");
             stmt.setString(2, slotId);
+            stmt.setString(3, "not yet");
             stmt.executeUpdate();
         } catch (SQLException e) {
 
@@ -142,6 +143,18 @@ public class CheckAttendence {
 
     }
 
+    private void checkIgnoring() {
+        Connection conn = Singleton.getInstance();
+        try {
+            PreparedStatement stmt = conn.prepareStatement("update attendance set status = ? where status = ?");
+            stmt.setString(1, "PRESENT");
+            stmt.setString(2, "ignoring");
+        } catch (SQLException e) {
+            
+            e.printStackTrace();
+        }
+
+    }
     public void showMenu() {
         getDates();
         var flag = false;
@@ -157,5 +170,6 @@ public class CheckAttendence {
         showStudentList();
         checkPresent();
         checkAbsence();
+        checkIgnoring();
     }
 }
