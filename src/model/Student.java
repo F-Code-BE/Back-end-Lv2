@@ -79,5 +79,12 @@ public class Student {
             ", majorID='" + getMajorID() + "'" +
             "}";
     }
-
+    public String toString2() {
+        return
+            " id=" + getId() +
+            ", name=" + getName()+
+            ", dateOfBirth=" + Validation.convertDateFormat(getDateOfBirth(), Regex.DATE_PATTERN) +
+            ", mail=" + getMail()+
+            ", majorID=" + getMajorID();
+    }
 }
