@@ -14,13 +14,11 @@ public class Main {
             if (userCase == 1) {
                 menu.add("View information");
                 menu.add("View curriculum");
-                menu.add("View attendence report");
+                menu.add("View attendance report");
                 menu.add("View academic transcript");
                 menu.add("View Timetable");
                 menu.add("Change group");
-                menu.add("Suspend one semester");
-                menu.add("Change information");
-                menu.add("Request to ignore attendence");
+                menu.add("Request");
                 menu.add("Log out");
                 do {
                     ViewInfo viewInfo = new ViewInfo();
@@ -46,11 +44,14 @@ public class Main {
                         case 6:
                             ChangeGroup.getAllCourses(userID);
                             break;
+                        case 7:
+                            StudentRequest request = new StudentRequest(LogIn.getUserId());
+                            request.showMenu();
                         default:
                             break;
                     }
 
-                } while (userChoice != 10);
+                } while (userChoice != 8);
             } else if (userCase == 2) {
                 menu.add("View Timetable");
                 menu.add("Check attendance");

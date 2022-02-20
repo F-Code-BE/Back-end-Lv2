@@ -67,8 +67,7 @@ public class ChangeGroup {
                 for (Timetable t : Timetable) {
                     if (t.getCourseId().equals(courseId)) {
                         currentGroupId = t.getGroupId();
-                        flag = true;
-                        break;
+                        flag = true;                                                                                  
                     }
                 }
                 if (!flag) {
