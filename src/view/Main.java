@@ -26,7 +26,7 @@ public class Main {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
                     System.out.println(userID);
-                    
+
                     switch (userChoice) {
                         case 1:
                             viewInfo.viewStudentInfo(userID);
