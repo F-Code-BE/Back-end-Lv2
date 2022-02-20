@@ -87,7 +87,7 @@ public class StudentRequest {
 
     public void changeInfo() {
         user = new Student();
-        user.setId("SE160001");
+        user.setId(user.getId());
         user.setName(Validation.inputString("Enter new name (type null to skip): ", "([\\w|\\s]+)"));
         user.setMail(Validation.inputString("Enter new email (type null to skip): ", Regex.EMAIL_PATTERN + "|null"));
         user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyyy or null to skip): ", true));
@@ -99,7 +99,7 @@ public class StudentRequest {
 
     public void retake() {
         user = new Student();
-        user.setId("SE160001");
+        user.setId(user.getId());
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = "SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = ?";
@@ -123,7 +123,7 @@ public class StudentRequest {
 
     public void checkAttendance() {
         user = new Student();
-        user.setId("SE160001");
+        user.setId(user.getId());
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = " SELECT slot_id from Attendance";
@@ -145,7 +145,7 @@ public class StudentRequest {
 
     public void alterClass() {
         user = new Student();
-        user.setId("SE160001");
+        user.setId(user.getId());
         int choice = 0;
         String courseId;
         String classId;
