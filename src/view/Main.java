@@ -23,7 +23,6 @@ public class Main {
                 do {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
-                    System.out.println(userID);
                     
                     switch (userChoice) {
                         case 1:
@@ -45,7 +44,7 @@ public class Main {
                             ChangeGroup.getAllCourses(userID);
                             break;
                         case 7:
-                            StudentRequest request = new StudentRequest(LogIn.getUserId());
+                            StudentRequest request = new StudentRequest(userID);
                             request.showMenu();
                         default:
                             break;
@@ -70,6 +69,7 @@ public class Main {
                         case 6:
                             var inputMark = new InputMark(LogIn.getUserId());
                             inputMark.showMenu();
+                            break;
                         default:
                             break;
                     }

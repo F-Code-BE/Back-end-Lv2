@@ -113,6 +113,7 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= courseList.size()) {
                 System.out.println("Wrong input, please try again!");
             }
@@ -135,6 +136,7 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= slots.size()) {
                 System.out.println("Wrong input, please try again!");
             }
@@ -165,6 +167,7 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= courseList.size()) {
                 System.out.println("Wrong input, please try again!");
             }
@@ -182,6 +185,7 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= classes.size()) {
                 System.out.println("Wrong input, please try again!");
             }
@@ -196,11 +200,11 @@ public class StudentRequest {
     public void showMenu() {
         int choice = 0;
         FapMenu menu = new FapMenu();
-
         menu.add("Change Information"); 
         menu.add("Retake");
         menu.add("Check Attendance");  
         menu.add("Alternating class");
+        menu.add("Exit");
         do {
             choice = menu.getUserChoice();
             switch (choice) {
