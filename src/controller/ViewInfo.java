@@ -134,7 +134,7 @@ public class ViewInfo {
         // list of class
         try {
             // show time table
-            Vector<Timetable> timetable = new Vector<>();
+            Vector<Timetable> Timetable = new Vector<>();
             PreparedStatement statement = conn.prepareStatement(
                     "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = ?");
             statement.setString(1, studentId);
@@ -142,15 +142,15 @@ public class ViewInfo {
 
             System.out.println("ALL COURSE:");
             while (resultSet.next()) {
-                Timetable timetableModel = new Timetable();
-                timetableModel.setGroupId(resultSet.getString(1));
-                timetableModel.setCourseId(resultSet.getString(2));
-                timetableModel.setSlotType(resultSet.getString(3));
-                timetableModel.setSemesterId(resultSet.getString(4));
-                timetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
-                timetable.add(timetableModel);
+                Timetable TimetableModel = new Timetable();
+                TimetableModel.setGroupId(resultSet.getString(1));
+                TimetableModel.setCourseId(resultSet.getString(2));
+                TimetableModel.setSlotType(resultSet.getString(3));
+                TimetableModel.setSemesterId(resultSet.getString(4));
+                TimetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
+                Timetable.add(TimetableModel);
             }
-            for (Timetable t : timetable) {
+            for (Timetable t : Timetable) {
                 System.out.println(t.toString());
             }
         } catch (Exception e) {

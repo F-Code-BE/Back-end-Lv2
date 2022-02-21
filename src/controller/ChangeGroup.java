@@ -64,8 +64,7 @@ public class ChangeGroup {
                 for (Timetable t : timetable) {
                     if (t.getCourseId().equals(courseId)) {
                         currentGroupId = t.getGroupId();
-                        flag = true;
-                        break;
+                        flag = true;                                                                                  
                     }
                 }
                 if (Boolean.FALSE.equals(flag)) {
@@ -112,7 +111,7 @@ public class ChangeGroup {
                     System.out.println("There are no group " + groupId + ". Please try again!");
                 }
             } while (Boolean.FALSE.equals(flag));
-
+            
             // Choose class id and check if there was a duplicate
             classId = groupId + "_" + courseId;
             currentClass = currentGroupId + "_" + courseId;
@@ -189,5 +188,9 @@ public class ChangeGroup {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    
+    public static void main(String[] args) {
+        getAllCourses("SE160001");
     }
 }
