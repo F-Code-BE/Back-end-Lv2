@@ -132,7 +132,7 @@ public class ChangeGroup {
             }
 
             // check if there is enough student
-            statement = conn.prepareStatement("SELECT max_student FROM Class WHERE class_id = ?");
+            statement = conn.prepareStatement("SELECT max_student FROM Class WHERE id = ?");
             statement.setString(1, currentClass);
             resultSet = statement.executeQuery();
             resultSet.next();
@@ -147,8 +147,6 @@ public class ChangeGroup {
             statement.setString(2, userId);
             statement.setString(3, currentClass);
             statement.executeUpdate();
-            System.out.println("DONE");
-            
             // Update new slot in attendance table
             // delete all current slot
             statement = conn.prepareStatement("DELETE FROM Attendance WHERE student_id = ? AND slot_id LIKE ?");
@@ -174,12 +172,12 @@ public class ChangeGroup {
                 statement.executeUpdate();
             }
             // increase max student new class by 1
-            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student + 1 WHERE class_id = ?");
+            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student + 1 WHERE id = ?");
             statement.setString(1, classId);
             statement.executeUpdate();
 
             // decrease max student old class by 1
-            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student - 1 WHERE class_id = ?");
+            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student - 1 WHERE id = ?");
             statement.setString(1, currentClass);
             statement.executeUpdate();
 
