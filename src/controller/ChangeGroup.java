@@ -142,13 +142,13 @@ public class ChangeGroup {
             }
 
             // update new class to class table
-            statement = conn
-                    .prepareStatement("UPDATE Class_student SET class_id = ? WHERE student_id = ? AND class_id = ?");
+            statement = conn.prepareStatement("UPDATE Class_student SET class_id = ? WHERE student_id = ? AND class_id = ?");
             statement.setString(1, classId);
             statement.setString(2, userId);
             statement.setString(3, currentClass);
             statement.executeUpdate();
-
+            System.out.println("DONE");
+            
             // Update new slot in attendance table
             // delete all current slot
             statement = conn.prepareStatement("DELETE FROM Attendance WHERE student_id = ? AND slot_id LIKE ?");
@@ -165,7 +165,6 @@ public class ChangeGroup {
             while (resultSet.next()) {
                 slotIds.add(resultSet.getString(1));
             }
-
             // Insert new slot
             for (String slotId : slotIds) {
                 statement = conn
