@@ -26,7 +26,7 @@ public class Main {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
                     System.out.println(userID);
-                    
+
                     switch (userChoice) {
                         case 1:
                             viewInfo.viewStudentInfo(userID);
@@ -46,6 +46,13 @@ public class Main {
                         case 6:
                             ChangeGroup.getAllCourses(userID);
                             break;
+<<<<<<< Updated upstream
+=======
+                        case 7:
+                            StudentRequest request = new StudentRequest(LogIn.getUserId());
+                            request.showMenu();
+                            break;
+>>>>>>> Stashed changes
                         default:
                             break;
                     }
@@ -69,6 +76,7 @@ public class Main {
                         case 6:
                             var inputMark = new InputMark(LogIn.getUserId());
                             inputMark.showMenu();
+                            break;
                         default:
                             break;
                     }
