@@ -17,7 +17,7 @@ public class CheckAttendence {
     private String teacherId;
     private String classId;
     private String slotId;
-    private int slot;
+   
     private Date date;
     private ArrayList<Date> dates = new ArrayList<>();
     private ArrayList<String> studentIds = new ArrayList<>();
@@ -59,7 +59,6 @@ public class CheckAttendence {
         }
         while (userChoice > menu.size() || userChoice < menu.size());
         classId = classIds.get(userChoice - 1);
-        slot = slots.get(userChoice - 1);
         slotId = slotIds.get(userChoice - 1);
     }
 
