@@ -94,15 +94,13 @@ public class HandleRequest {
 
         var conn = Singleton.getInstance();
         String teacherId = "";
-        Vector<Timetable> Timetable = new Vector<>();
+        Vector<Timetable> timetable = new Vector<>();
         Vector<String> slotIds = new Vector<>();
         try {
             PreparedStatement statement = conn.prepareStatement(
                     "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = ?");
             statement.setString(1, userId);
             ResultSet resultSet = statement.executeQuery();
-
-            System.out.println("ALL COURSE:");
             while (resultSet.next()) {
                 Timetable TimetableModel = new Timetable();
                 TimetableModel.setGroupId(resultSet.getString(1));
@@ -110,7 +108,7 @@ public class HandleRequest {
                 TimetableModel.setSlotType(resultSet.getString(3));
                 TimetableModel.setSemesterId(resultSet.getString(4));
                 TimetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
-                Timetable.add(TimetableModel);
+                timetable.add(TimetableModel);
             }
 
             statement = conn.prepareStatement("SELECT st.id, st.teacher_id FROM Slot_type st WHERE st.class_id = ?");
@@ -120,13 +118,23 @@ public class HandleRequest {
             // Check is there duplicated?
             while (resultSet.next()) {
                 String slotType = new String(resultSet.getString(1));
-                for (Timetable time : Timetable) {
+                for (Timetable time : timetable) {
                     if (time.getSlotType().equals(slotType)) {
-                        return false;
+                        throw new Exception("Duplicated slot");
                     }
                 }
 
                 teacherId = resultSet.getString(2);
+            }
+
+            // check if there is enough student
+            statement = conn.prepareStatement("SELECT max_student FROM Class WHERE id = ?");
+            statement.setString(1, currentClass);
+            resultSet = statement.executeQuery();
+            resultSet.next();
+            int maxStudent = Integer.parseInt(resultSet.getString(1));
+            if (maxStudent >= 30) {
+                throw new Exception("There are no empty slot");
             }
 
             // update new class to class table
@@ -136,7 +144,6 @@ public class HandleRequest {
             statement.setString(2, userId);
             statement.setString(3, currentClass);
             statement.executeUpdate();
-
             // Update new slot in attendance table
             // delete all current slot
             statement = conn.prepareStatement("DELETE FROM Attendance WHERE student_id = ? AND slot_id LIKE ?");
@@ -153,7 +160,6 @@ public class HandleRequest {
             while (resultSet.next()) {
                 slotIds.add(resultSet.getString(1));
             }
-
             // Insert new slot
             for (String slotId : slotIds) {
                 statement = conn
@@ -162,8 +168,20 @@ public class HandleRequest {
                 statement.setString(2, slotId);
                 statement.executeUpdate();
             }
+            // increase max student new class by 1
+            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student + 1 WHERE id = ?");
+            statement.setString(1, classId);
+            statement.executeUpdate();
+
+            // decrease max student old class by 1
+            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student - 1 WHERE id = ?");
+            statement.setString(1, currentClass);
+            statement.executeUpdate();
+
+            System.out.println("Successfully change");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return false;
         }
         System.out.println("Successfully change");
         return true;
@@ -193,10 +211,44 @@ public class HandleRequest {
         PreparedStatement stmt;
 
         var request = requests.get(c);
-        System.out.println(request.getType());
         try {
             if (request.getType() == 1) {
-                System.out.println(request.getMessage());
+                String message = request.getMessage();
+                message += ',';
+                var attributes = message.split(",");
+                String newName = attributes[1];
+                String newDoB = attributes[2];
+                String newMail = attributes[3];
+                String newMajor = attributes[4];
+                newName = newName.substring(newName.indexOf('=') + 1);
+                newDoB = newDoB.substring(newDoB.indexOf('=') + 1);
+                newMail = newMail.substring(newMail.indexOf('=') + 1);
+                newMajor = newMajor.substring(newMajor.indexOf('=') + 1);
+                if (!newName.equalsIgnoreCase("null")) {
+                    stmt = conn.prepareStatement("update student set name = ? where id = ?");
+                    stmt.setString(1, newName);
+                    stmt.setString(2, request.getStudentId());
+                    stmt.executeUpdate();
+                }
+                if (!newDoB.equalsIgnoreCase("null")) {
+                    stmt = conn.prepareStatement("update student set date_of_birth = ? where id = ?");
+                    stmt.setString(1, newDoB);
+                    stmt.setString(2, request.getStudentId());
+                    stmt.executeUpdate();
+                }
+                if (!newMail.equalsIgnoreCase("null")) {
+                    stmt = conn.prepareStatement("update student set mail = ? where id = ?");
+                    stmt.setString(1, newMail);
+                    stmt.setString(2, request.getStudentId());
+                    stmt.executeUpdate();
+                }
+                if (!newMajor.equalsIgnoreCase("null")) {
+                    stmt = conn.prepareStatement("update student set major_id = ? where id = ?");
+                    stmt.setString(1, newMajor);
+                    stmt.setString(2, request.getStudentId());
+                    stmt.executeUpdate();
+                }
+                markAccept(request.getRequestId());
             } else if (request.getType() == 2) {
                 String courseId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
                 stmt = conn.prepareStatement(
@@ -206,6 +258,7 @@ public class HandleRequest {
                 stmt.setString(3, "%" + courseId);
                 stmt.executeUpdate();
                 markAccept(request.getRequestId());
+              
 
             } else if (request.getType() == 3) {
                 String slotId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
@@ -215,12 +268,13 @@ public class HandleRequest {
                 stmt.setString(3, slotId);
                 stmt.executeUpdate();
                 markAccept(request.getRequestId());
+                
             } else {
                 String classId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
                 String subject = classId.substring(classId.indexOf('_') + 1);
                 String currentClass = getCurrentClass(request, subject);
 
-                System.out.println(currentClass);
+               
                 for (int i = 0; i < requests.size(); i++)
                     if (i != c && requests.get(i).getType() == 4) {
                         var otherRequest = requests.get(i);
@@ -244,22 +298,72 @@ public class HandleRequest {
     private static void acceptRequest() {
         var choices = new ArrayList<Integer>();
         while (true) {
-            int number = Validation.inputInt("Enter request number that you want to accept (0 to finish): ");
+            int number;
+            do {
+                number = Validation.inputInt("Enter request number that you want to accept (0 to finish): ");
+                if (number < 0 || number > requests.size()) {
+                    System.out.println("PLease enter the valid number!");
+                } 
+            } while (number < 0 || number > requests.size());
+          
+            if (number == 0)
+                break;
+            choices.add(number);
+        }
+        var removedRequest = new ArrayList<String>();
+        choices.forEach((c) -> {
+            handle(c - 1);
+            removedRequest.add(requests.get(c - 1).getRequestId());
+        });
+        requests.removeIf((request) -> {
+            return removedRequest.contains(request.getRequestId());
+        });
+    }
+
+    private static void markReject(String requestId) {
+        var conn = Singleton.getInstance();
+        try {
+            PreparedStatement stmt = conn.prepareStatement("update request set status = ? where id = ?");
+            stmt.setString(1, "Rejected");
+            stmt.setString(2, requestId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+    }
+    private static void rejectRequest() {
+        var choices = new ArrayList<Integer>();
+        while (true) {
+            int number;
+            do {
+                number = Validation.inputInt("Enter request number that you want to reject (0 to finish): ");
+                if (number < 0 || number > requests.size()) {
+                    System.out.println("PLease enter the valid number!");
+                } 
+            } while (number < 0 || number > requests.size());
+          
             if (number == 0)
                 break;
             choices.add(number);
         }
         choices.forEach((c) -> {
-            handle(c - 1);
-        });
+            markReject(requests.get(c - 1).getRequestId());
+        });   
     }
-
     public static void showMenu() {
         getRequestsData();
+        System.out.println("\n             List of pending requests: \n");
         for (int i = 0; i < requests.size(); i++) {
             System.out.println(
                     i + 1 + ". Student " + requests.get(i).getStudentId() + " want to " + showChoice(requests.get(i)));
         }
         acceptRequest();
+        System.out.println("\n             List of pending requests: \n");
+        for (int i = 0; i < requests.size(); i++) {
+            System.out.println(
+                    i + 1 + ". Student " + requests.get(i).getStudentId() + " want to " + showChoice(requests.get(i)));
+        }
+        rejectRequest();
     }
 }
