@@ -8,6 +8,9 @@ public class Main {
        
         while (true) {
             int userCase = LogIn.logIn();
+            if (userCase == 0) {
+                continue;
+            }
             var menu = new FapMenu();
             String userID = LogIn.getUserId();
             int userChoice;

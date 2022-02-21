@@ -195,7 +195,7 @@ public class HandleRequest {
         System.out.println(request.getType());
         try {
             if (request.getType() == 1) {
-
+                System.out.println(request.getMessage());
             } else if (request.getType() == 2) {
                 String courseId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
                 stmt = conn.prepareStatement(
