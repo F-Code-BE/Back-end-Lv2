@@ -65,10 +65,7 @@ public class ChangeGroup {
                     if (t.getCourseId().equals(courseId)) {
                         currentGroupId = t.getGroupId();
                         flag = true;
-<<<<<<< Updated upstream
                         break;
-=======
->>>>>>> Stashed changes
                     }
                 }
                 if (Boolean.FALSE.equals(flag)) {

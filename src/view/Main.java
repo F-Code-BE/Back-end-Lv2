@@ -46,13 +46,10 @@ public class Main {
                         case 6:
                             ChangeGroup.getAllCourses(userID);
                             break;
-<<<<<<< Updated upstream
-=======
                         case 7:
                             StudentRequest request = new StudentRequest(LogIn.getUserId());
                             request.showMenu();
                             break;
->>>>>>> Stashed changes
                         default:
                             break;
                     }
