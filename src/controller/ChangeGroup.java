@@ -186,8 +186,4 @@ public class ChangeGroup {
             System.out.println(e.getMessage());
         }
     }
-    
-    public static void main(String[] args) {
-        getAllCourses("SE160001");
-    }
 }
