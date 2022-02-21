@@ -11,7 +11,7 @@ FROM Class c
     JOIN Slot_type st ON c.id = st.class_id
 WHERE c.course_id = 'PRF192' AND NOT c.group_id = 'SE1602';
 
-UPDATE Class_student SET class_id = 'SE1602_PRF192' WHERE student_id = 'SE160001' AND class_id = 'SE1601_PRF192';
+UPDATE Class_student SET class_id = 'SE1601_PRF192' WHERE student_id = 'SE160001' AND class_id = 'SE1602_PRF192';
 
 SELECT * FROM Class_student;
 

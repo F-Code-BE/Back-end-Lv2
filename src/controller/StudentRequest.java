@@ -184,7 +184,7 @@ public class StudentRequest {
         } while (choice >= classes.size());
         classId = classes.get(choice);
 
-        sendData("4", user.getId(), null, "classid=" + classId);
+        sendData("4", user.getId(), null, "classId=" + classId);
         System.out.println("Request successful");
 
     }
