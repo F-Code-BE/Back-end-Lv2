@@ -90,7 +90,7 @@ public class HandleRequest {
         }
     }
 
-    private static void changeClass(String classId, String currentClass, String userId) {
+    private static boolean changeClass(String classId, String currentClass, String userId) {
 
         var conn = Singleton.getInstance();
         String teacherId = "";
@@ -122,7 +122,7 @@ public class HandleRequest {
                 String slotType = new String(resultSet.getString(1));
                 for (Timetable time : Timetable) {
                     if (time.getSlotType().equals(slotType)) {
-                        throw new Exception("Duplicated slot");
+                        return false;
                     }
                 }
 
@@ -166,6 +166,7 @@ public class HandleRequest {
             e.printStackTrace();
         }
         System.out.println("Successfully change");
+        return true;
     }
 
     private static String getCurrentClass(Request request, String subject) {
@@ -181,7 +182,7 @@ public class HandleRequest {
             while (rs.next())
                 currentClass = rs.getString(1);
         } catch (SQLException e) {
-            
+
             e.printStackTrace();
         }
         return currentClass;
@@ -227,10 +228,11 @@ public class HandleRequest {
                                 .substring(otherRequest.getMessage().indexOf('=') + 1);
                         var otherCurrentClass = getCurrentClass(otherRequest, subject);
                         if (classId == otherCurrentClass && currentClass == otherClassId) {
-                            changeClass(classId, currentClass, request.getStudentId());
-                            changeClass(otherClassId, otherCurrentClass, otherRequest.getStudentId());
-                            markAccept(request.getRequestId());
-                            markAccept(otherRequest.getRequestId());
+                            if (changeClass(classId, currentClass, request.getStudentId())
+                                    && changeClass(otherClassId, otherCurrentClass, otherRequest.getStudentId())) {
+                                markAccept(request.getRequestId());
+                                markAccept(otherRequest.getRequestId());
+                            }
                         }
                     }
             }

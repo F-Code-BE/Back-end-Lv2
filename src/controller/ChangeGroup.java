@@ -15,18 +15,15 @@ class GroupCourse extends Timetable {
 public class ChangeGroup {
 
     public static String inputCourseId() {
-        String courseId = new String(Validation.inputString("Enter CourseId: ", ""));
-        return courseId;
+        return new String(Validation.inputString("Enter CourseId: ", ""));
     }
 
     public static String inputGroupId() {
-        String groupId = new String(Validation.inputString("Enter GroupId: ", ""));
-        return groupId;
+        return new String(Validation.inputString("Enter GroupId: ", ""));
     }
 
     public static String inputTeacherId() {
-        String teacherId = new String(Validation.inputString("Enter TeacherID: ", ""));
-        return teacherId;
+        return new String(Validation.inputString("Enter TeacherID: ", ""));
     }
 
     public static void getAllCourses(String userId) {
@@ -35,15 +32,15 @@ public class ChangeGroup {
 
         try {
             // show time table
-            String courseId = new String();
-            String classId = new String();
-            String groupId = new String();
+            String courseId;
+            String classId;
+            String groupId;
             String teacherId = new String();
-            String currentClass = new String();
+            String currentClass;
             String currentGroupId = new String();
             Boolean flag = false;
-            Vector<String> slotIds = new Vector<>();
-            Vector<Timetable> Timetable = new Vector<>();
+            ArrayList<String> slotIds = new ArrayList<>();
+            ArrayList<Timetable> timetable = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(
                     "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = ?");
             statement.setString(1, userId);
@@ -51,29 +48,29 @@ public class ChangeGroup {
 
             System.out.println("ALL COURSE:");
             while (resultSet.next()) {
-                Timetable TimetableModel = new Timetable();
-                TimetableModel.setGroupId(resultSet.getString(1));
-                TimetableModel.setCourseId(resultSet.getString(2));
-                TimetableModel.setSlotType(resultSet.getString(3));
-                TimetableModel.setSemesterId(resultSet.getString(4));
-                TimetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
-                Timetable.add(TimetableModel);
+                Timetable timetableModel = new Timetable();
+                timetableModel.setGroupId(resultSet.getString(1));
+                timetableModel.setCourseId(resultSet.getString(2));
+                timetableModel.setSlotType(resultSet.getString(3));
+                timetableModel.setSemesterId(resultSet.getString(4));
+                timetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
+                timetable.add(timetableModel);
             }
-            for (Timetable t : Timetable) {
+            for (Timetable t : timetable) {
                 System.out.println(t.toString());
             }
             do {
                 courseId = inputCourseId();
-                for (Timetable t : Timetable) {
+                for (Timetable t : timetable) {
                     if (t.getCourseId().equals(courseId)) {
                         currentGroupId = t.getGroupId();
                         flag = true;                                                                                  
                     }
                 }
-                if (!flag) {
+                if (Boolean.FALSE.equals(flag)) {
                     System.out.println("There is no courses " + courseId + ". Please try again!");
                 }
-            } while (!flag);
+            } while (Boolean.FALSE.equals(flag));
 
             // show all available classes for the course
             flag = false;
@@ -82,7 +79,7 @@ public class ChangeGroup {
             statement.setString(1, courseId);
             statement.setString(2, currentGroupId);
             resultSet = statement.executeQuery();
-            Vector<GroupCourse> groupCourse = new Vector<GroupCourse>();
+            ArrayList<GroupCourse> groupCourse = new ArrayList<>();
 
             while (resultSet.next()) {
                 GroupCourse groupCourseModel = new GroupCourse();
@@ -93,7 +90,7 @@ public class ChangeGroup {
                 groupCourseModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
                 groupCourse.add(groupCourseModel);
             }
-            if (groupCourse.size() == 0) {
+            if (groupCourse.isEmpty()) {
                 throw new Exception("There are no group available for you");
             }
             System.out.println("ALL GROUP AVAILABLE: ");
@@ -110,29 +107,38 @@ public class ChangeGroup {
                     }
                 }
 
-                if (!flag) {
+                if (Boolean.FALSE.equals(flag)) {
                     System.out.println("There are no group " + groupId + ". Please try again!");
                 }
-            } while (!flag);
-
-            // Choose group id and check if there was a duplicate
+            } while (Boolean.FALSE.equals(flag));
+            
+            // Choose class id and check if there was a duplicate
             classId = groupId + "_" + courseId;
             currentClass = currentGroupId + "_" + courseId;
             statement = conn.prepareStatement("SELECT st.id, st.teacher_id FROM Slot_type st WHERE st.class_id = ?");
             statement.setString(1, classId);
             resultSet = statement.executeQuery();
-            flag = false;
 
             // Check is there duplicated?
             while (resultSet.next()) {
                 String slotType = new String(resultSet.getString(1));
-                for (Timetable time : Timetable) {
+                for (Timetable time : timetable) {
                     if (time.getSlotType().equals(slotType)) {
                         throw new Exception("Duplicated slot");
                     }
                 }
 
                 teacherId = resultSet.getString(2);
+            }
+
+            // check if there is enough student
+            statement = conn.prepareStatement("SELECT max_student FROM Class WHERE class_id = ?");
+            statement.setString(1, currentClass);
+            resultSet = statement.executeQuery();
+            resultSet.next();
+            int maxStudent = Integer.parseInt(resultSet.getString(1));
+            if (maxStudent >= 30) {
+                throw new Exception("There are no empty slot");
             }
 
             // update new class to class table
@@ -168,10 +174,23 @@ public class ChangeGroup {
                 statement.setString(2, slotId);
                 statement.executeUpdate();
             }
+            // increase max student new class by 1
+            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student + 1 WHERE class_id = ?");
+            statement.setString(1, classId);
+            statement.executeUpdate();
+
+            // decrease max student old class by 1
+            statement = conn.prepareStatement("UPDATE Class SET max_student = max_student - 1 WHERE class_id = ?");
+            statement.setString(1, currentClass);
+            statement.executeUpdate();
 
             System.out.println("Successfully change");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    
+    public static void main(String[] args) {
+        getAllCourses("SE160001");
     }
 }

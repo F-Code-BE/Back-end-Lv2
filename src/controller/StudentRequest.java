@@ -86,8 +86,6 @@ public class StudentRequest {
     }
 
     public void changeInfo() {
-        user = new Student();
-        user.setId(user.getId());
         user.setName(Validation.inputString("Enter new name (type null to skip): ", "([\\w|\\s]+)"));
         user.setMail(Validation.inputString("Enter new email (type null to skip): ", Regex.EMAIL_PATTERN + "|null"));
         user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyyy or null to skip): ", true));
@@ -98,8 +96,6 @@ public class StudentRequest {
     }
 
     public void retake() {
-        user = new Student();
-        user.setId(user.getId());
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = "SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = ?";
@@ -113,17 +109,16 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= courseList.size()) {
                 System.out.println("Wrong input, please try again!");
             }
         } while (choice >= courseList.size());
-        sendData("2", user.getId(), null, "couresId=" + courseList.get(choice));
+        sendData("2", user.getId(), null, "coursesId=" + courseList.get(choice));
         System.out.println("Request successful");
     }
 
     public void checkAttendance() {
-        user = new Student();
-        user.setId(user.getId());
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = " SELECT slot_id from Attendance";
@@ -135,17 +130,16 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= slots.size()) {
                 System.out.println("Wrong input, please try again!");
             }
         } while (choice >= slots.size());
         sendData("3", user.getId(), null, "slotId=" + slots.get(choice));
         System.out.println("Request successful");
-    }
+    }               
 
     public void alterClass() {
-        user = new Student();
-        user.setId(user.getId());
         int choice = 0;
         String courseId;
         String classId;
@@ -165,6 +159,7 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= courseList.size()) {
                 System.out.println("Wrong input, please try again!");
             }
@@ -182,6 +177,7 @@ public class StudentRequest {
         do {
             choice = menu.getUserChoice();
             choice--;
+            if (choice == -1) break;
             if (choice >= classes.size()) {
                 System.out.println("Wrong input, please try again!");
             }
@@ -196,11 +192,11 @@ public class StudentRequest {
     public void showMenu() {
         int choice = 0;
         FapMenu menu = new FapMenu();
-
         menu.add("Change Information"); 
         menu.add("Retake");
         menu.add("Check Attendance");  
         menu.add("Alternating class");
+        menu.add("Exit");
         do {
             choice = menu.getUserChoice();
             switch (choice) {
