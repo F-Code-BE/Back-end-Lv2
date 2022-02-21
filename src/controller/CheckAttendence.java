@@ -53,11 +53,11 @@ public class CheckAttendence {
         int userChoice;
         do {
             userChoice = menu.getUserChoice();
-            if (userChoice > menu.size() || userChoice < menu.size()) {
+            if (userChoice > menu.size()) {
                 System.out.println("Please enter valid number!");
             }
         }
-        while (userChoice > menu.size() || userChoice < menu.size());
+        while (userChoice > menu.size());
         classId = classIds.get(userChoice - 1);
         slotId = slotIds.get(userChoice - 1);
     }
