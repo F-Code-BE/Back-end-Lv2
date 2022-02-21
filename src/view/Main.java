@@ -23,7 +23,7 @@ public class Main {
                 do {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
-                    
+
                     switch (userChoice) {
                         case 1:
                             viewInfo.viewStudentInfo(userID);
@@ -46,12 +46,14 @@ public class Main {
                         case 7:
                             StudentRequest request = new StudentRequest(userID);
                             request.showMenu();
+                            break;
                         default:
                             break;
                     }
 
-                } while (userChoice != 8);
+                } while (userChoice != menu.size());
             } else if (userCase == 2) {
+                menu.add("View information");
                 menu.add("View Timetable");
                 menu.add("Check attendance");
                 menu.add("Change information");
@@ -62,18 +64,22 @@ public class Main {
                 do {
                     userChoice = menu.getUserChoice();
                     switch (userChoice) {
-                        case 2:
+                        case 1:
+                            ViewInfo viewInfo = new ViewInfo();
+                            viewInfo.viewTeacherInfo(userID);
+                            break;
+                        case 3:
                             var checkAttendence = new CheckAttendence(LogIn.getUserId());
                             checkAttendence.showMenu();
                             break;
-                        case 6:
+                        case 7:
                             var inputMark = new InputMark(LogIn.getUserId());
                             inputMark.showMenu();
                             break;
                         default:
                             break;
                     }
-                } while (userChoice != 7);
+                } while (userChoice != menu.size());
 
             } else if (userCase == 3) {
                 menu.add("Add account");
@@ -92,7 +98,7 @@ public class Main {
                         default:
                             break;
                     }
-                } while (userChoice != 4);
+                } while (userChoice != menu.size());
             } else {
                 break;
             }

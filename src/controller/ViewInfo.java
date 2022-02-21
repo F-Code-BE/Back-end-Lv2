@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import model.*;
 import Lib.*;
@@ -134,7 +133,7 @@ public class ViewInfo {
         // list of class
         try {
             // show time table
-            Vector<Timetable> Timetable = new Vector<>();
+            ArrayList<Timetable> timetable = new ArrayList<>();
             PreparedStatement statement = conn.prepareStatement(
                     "SELECT c.group_id, c.course_id, st.id AS slot_type, c.semester_id, c.max_student FROM Class_student cs JOIN Class c ON cs.class_id = c.id JOIN Slot_type st ON cs.class_id = st.class_id WHERE cs.student_id = ?");
             statement.setString(1, studentId);
@@ -142,17 +141,37 @@ public class ViewInfo {
 
             System.out.println("ALL COURSE:");
             while (resultSet.next()) {
-                Timetable TimetableModel = new Timetable();
-                TimetableModel.setGroupId(resultSet.getString(1));
-                TimetableModel.setCourseId(resultSet.getString(2));
-                TimetableModel.setSlotType(resultSet.getString(3));
-                TimetableModel.setSemesterId(resultSet.getString(4));
-                TimetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
-                Timetable.add(TimetableModel);
+                Timetable timetableModel = new Timetable();
+                timetableModel.setGroupId(resultSet.getString(1));
+                timetableModel.setCourseId(resultSet.getString(2));
+                timetableModel.setSlotType(resultSet.getString(3));
+                timetableModel.setSemesterId(resultSet.getString(4));
+                timetableModel.setMaxStudent(Integer.parseInt(resultSet.getString(5)));
+                timetable.add(timetableModel);
             }
-            for (Timetable t : Timetable) {
+            for (Timetable t : timetable) {
                 System.out.println(t.toString());
             }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }
+
+    public void viewTeacherInfo(String teacherId) {
+        Connection conn = Singleton.getInstance();
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "SELECT id, name, password, mail FROM Teacher WHERE id = ?");
+            statement.setString(1, teacherId);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                System.out.println("Id: " + result.getString("id"));
+                System.out.println("Name: " + result.getString("name"));
+                System.out.println("Password: " + result.getString("password"));
+                System.out.println("Mail: " + result.getString("mail"));
+            }
+
         } catch (Exception e) {
             System.out.println(e);
         }
