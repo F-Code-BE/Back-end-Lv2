@@ -142,10 +142,33 @@ public class StudentRequest extends Request {
 
     }
     private void viewRequest() {
-        String query = "SELECT * FROM request WHERE student_Id = ?";
-        Vector<Object> requests = executeDb2("query", query, user.getId());
+        int count = 1;
+        String query = "SELECT type, message, status FROM request WHERE student_Id = ?";
+        Vector< Vector<String> > requests = executeDb2("query", query, user.getId());
 
+        for (Vector<String> request : requests) {
+            int type = Integer.parseInt(request.elementAt(0));
+
+            switch (type) {
+                case 1:                
+                    System.out.println((count++) + " " + request.elementAt(2) + ": Change information | " + request.elementAt(1));
+                    break;
+                case 2:
+                    System.out.println((count++) + " " + request.elementAt(2) + ": Retake | " + request.elementAt(1));
+                    break;
+                case 3:
+                    System.out.println((count++) + " " + request.elementAt(2) + ": Check attendance | " + request.elementAt(1));
+                    break;
+                case 4:
+                    System.out.println((count++) + " " + request.elementAt(2) + ": Alternating Class | " + request.elementAt(1));
+                    break;
+                default:
+                    break;
+            }
+        };
     }
+    
+    @Override
     public void showMenu() {
         int choice = 0;
         FapMenu menu = new FapMenu();
@@ -176,6 +199,6 @@ public class StudentRequest extends Request {
                 default:
                     break;
             }
-        } while (choice <= 4);
+        } while (choice <= 5);
     }
 }

@@ -40,9 +40,9 @@ public class Request {
         return result;
     }
 
-    protected Vector<Object> executeDb2(String type, String query, String... params) {
+    protected Vector< Vector<String> > executeDb2(String type, String query, String... params) {
         conn = Singleton.getInstance();
-        Vector<Object> result = new Vector<Object>();
+        Vector< Vector<String> > result = new Vector< Vector<String> >();
 
         try {
             statement = conn.prepareStatement(query);
@@ -54,11 +54,14 @@ public class Request {
                 return null;
             } else {
                 resultSet = statement.executeQuery();
-
+                rsmd = resultSet.getMetaData();
+                
                 while (resultSet.next()) {
+                    Vector<String> row = new Vector<String>();
                     for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                        System.out.println(resultSet.getString(i));
+                        row.add(resultSet.getString(i));
                     }
+                    result.add(row);
                 }
             }
         } catch (Exception e) {
@@ -81,5 +84,7 @@ public class Request {
         String query = "INSERT INTO Request VALUES (?, ?, ?, ?, ?, ?)";
         executeDb("update", query, Integer.toString(++currentId), studentId, teacherId, type, message, "Pending");
     }
+
+    public void showMenu() {}
 
 }

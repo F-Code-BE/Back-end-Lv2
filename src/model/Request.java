@@ -67,6 +67,18 @@ public class Request {
 
     public void setStatus(String status) {
         this.status = status;
-
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+            " requestId='" + getRequestId() + "'" +
+            ", studentId='" + getStudentId() + "'" +
+            ", teacherId='" + getTeacherId() + "'" +
+            ", type='" + getType() + "'" +
+            ", message='" + getMessage() + "'" +
+            ", status='" + getStatus() + "'" +
+            "}";
+    }
+
 }
