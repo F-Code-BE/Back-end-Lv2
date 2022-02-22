@@ -46,34 +46,37 @@ public class Main {
                         case 7:
                             StudentRequest request = new StudentRequest(userID);
                             request.showMenu();
+                            break;
                         default:
                             break;
                     }
 
-                } while (userChoice != 8);
+                } while (userChoice != menu.size());
             } else if (userCase == 2) {
-                menu.add("View Timetable");
+                menu.add("View information");
                 menu.add("Check attendance");
                 menu.add("Change information");
-                menu.add("Change subject");
-                menu.add("Change slot");
                 menu.add("Enter marks");
                 menu.add("Log out");
                 do {
                     userChoice = menu.getUserChoice();
                     switch (userChoice) {
+                        case 1:
+                            ViewInfo viewInfo = new ViewInfo();
+                            viewInfo.viewTeacherInfo(userID);
+                            break;
                         case 2:
                             var checkAttendence = new CheckAttendence(LogIn.getUserId());
                             checkAttendence.showMenu();
                             break;
-                        case 6:
+                        case 4:
                             var inputMark = new InputMark(LogIn.getUserId());
                             inputMark.showMenu();
                             break;
                         default:
                             break;
                     }
-                } while (userChoice != 7);
+                } while (userChoice != menu.size());
 
             } else if (userCase == 3) {
                 menu.add("Add account");
@@ -92,7 +95,7 @@ public class Main {
                         default:
                             break;
                     }
-                } while (userChoice != 4);
+                } while (userChoice != menu.size());
             } else {
                 break;
             }
