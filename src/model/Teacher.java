@@ -41,4 +41,23 @@ public class Teacher {
 
         this.mail = mail;
     }
+    
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", name='" + getName() + "'" +
+            ", mail='" + getMail() + "'" +
+            "}";
+    }
+
+    public String toString2() {
+        return
+            "id='" + getId() +
+            ", name=" + getName() +
+            ", mail=" + getMail();
+    }
 }
+
+
+    

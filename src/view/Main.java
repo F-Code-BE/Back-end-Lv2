@@ -20,14 +20,11 @@ public class Main {
                 menu.add("View academic transcript");
                 menu.add("View Timetable");
                 menu.add("Change group");
-                menu.add("Suspend one semester");
-                menu.add("Change information");
-                menu.add("Request to ignore attendence");
+                menu.add("Send Request");
                 menu.add("Log out");
                 do {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
-                    
                     switch (userChoice) {
                         case 1:
                             viewInfo.viewStudentInfo(userID);
@@ -70,11 +67,15 @@ public class Main {
                             viewInfo.viewTeacherInfo(userID);
                             break;
                         case 2:
-                            var checkAttendence = new CheckAttendence(LogIn.getUserId());
+                            var checkAttendence = new CheckAttendence(userID);
                             checkAttendence.showMenu();
                             break;
+                        case 3:
+                            TeacherRequest request = new TeacherRequest(userID);
+                            request.showMenu();
+                            break;
                         case 4:
-                            var inputMark = new InputMark(LogIn.getUserId());
+                            var inputMark = new InputMark(userID);
                             inputMark.showMenu();
                             break;
                         default:
