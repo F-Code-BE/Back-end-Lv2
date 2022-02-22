@@ -54,11 +54,8 @@ public class Main {
                 } while (userChoice != menu.size());
             } else if (userCase == 2) {
                 menu.add("View information");
-                menu.add("View Timetable");
                 menu.add("Check attendance");
                 menu.add("Change information");
-                menu.add("Change subject");
-                menu.add("Change slot");
                 menu.add("Enter marks");
                 menu.add("Log out");
                 do {
@@ -68,11 +65,11 @@ public class Main {
                             ViewInfo viewInfo = new ViewInfo();
                             viewInfo.viewTeacherInfo(userID);
                             break;
-                        case 3:
+                        case 2:
                             var checkAttendence = new CheckAttendence(LogIn.getUserId());
                             checkAttendence.showMenu();
                             break;
-                        case 7:
+                        case 4:
                             var inputMark = new InputMark(LogIn.getUserId());
                             inputMark.showMenu();
                             break;
