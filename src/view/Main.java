@@ -20,9 +20,7 @@ public class Main {
                 menu.add("View academic transcript");
                 menu.add("View Timetable");
                 menu.add("Change group");
-                menu.add("Suspend one semester");
-                menu.add("Change information");
-                menu.add("Request to ignore attendence");
+                menu.add("Send Request");
                 menu.add("Log out");
                 do {
                     ViewInfo viewInfo = new ViewInfo();

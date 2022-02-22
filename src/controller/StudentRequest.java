@@ -1,63 +1,22 @@
 package controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Vector;
 
 import model.Student;
 import view.FapMenu;
 import Lib.Regex;
 import Lib.Validation;
-import patterns.Singleton;
 
-public class StudentRequest {
+public class StudentRequest extends Request {
 
     private Student user = new Student();
     private String majorId;
-    private Connection conn;
-    private PreparedStatement statement;
-    private ResultSet resultSet;
 
     public StudentRequest(String id) {
         user.setId(id);
     }
-    // get data using query string 
-    public Vector<String> executeDb(String type, String query, String... params) {
-        conn = Singleton.getInstance();
-        Vector<String> result = new Vector<String>();
 
-        try {
-            statement = conn.prepareStatement(query);
-            for (int i = 0; i < params.length; i++) {
-                statement.setString(i + 1, params[i]);
-            }
-            if (type.equals("update")) {
-                statement.executeUpdate();
-                return null;
-            } else {
-                resultSet = statement.executeQuery();
-
-                while (resultSet.next()) {
-                    result.add(resultSet.getString(1));
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return result;
-    }
-
-    public int getRequestId() {
-        String query = "SELECT id from Request ORDER BY id DESC";
-        Vector<String> ids = executeDb("query", query); 
-        if (ids.size() == 0) {
-            return 0;
-        }
-        return Integer.parseInt(ids.firstElement());
-    }
-
-    public String getMajorId() {
+    private String getMajorId() {
         String query = "SELECT id FROM major";
         Vector<String> majors = new Vector<String>();
         majors = executeDb("query", query);
@@ -79,13 +38,7 @@ public class StudentRequest {
         } while (true);
     }
 
-    public void sendData(String type, String studentId, String teacherId, String message) {
-        int currentId = getRequestId();
-        String query = "INSERT INTO Request VALUES (?, ?, ?, ?, ?, ?)";
-        executeDb("update", query, Integer.toString(++currentId), studentId, teacherId, type, message, "Pending");
-    }
-
-    public void changeInfo() {
+    private void changeInfo() {
         user.setName(Validation.inputString("Enter new name (type null to skip): ", "([\\w|\\s]+)"));
         user.setMail(Validation.inputString("Enter new email (type null to skip): ", Regex.EMAIL_PATTERN + "|null"));
         user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyyy or null to skip): ", true));
@@ -95,7 +48,7 @@ public class StudentRequest {
         System.out.println("Request Successful");
     }
 
-    public void retake() {
+    private void retake() {
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = "SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = ?";
@@ -118,7 +71,7 @@ public class StudentRequest {
         System.out.println("Request successful");
     }
 
-    public void checkAttendance() {
+    private void checkAttendance() {
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = " SELECT slot_id from Attendance";
@@ -139,7 +92,7 @@ public class StudentRequest {
         System.out.println("Request successful");
     }               
 
-    public void alterClass() {
+    private void alterClass() {
         int choice = 0;
         String courseId;
         String classId;
@@ -188,7 +141,11 @@ public class StudentRequest {
         System.out.println("Request successful");
 
     }
-    
+    private void viewRequest() {
+        String query = "SELECT * FROM request WHERE student_Id = ?";
+        Vector<Object> requests = executeDb2("query", query, user.getId());
+
+    }
     public void showMenu() {
         int choice = 0;
         FapMenu menu = new FapMenu();
@@ -196,6 +153,7 @@ public class StudentRequest {
         menu.add("Retake");
         menu.add("Check Attendance");  
         menu.add("Alternating class");
+        menu.add("View request");
         menu.add("Exit");
         do {
             choice = menu.getUserChoice();
@@ -211,6 +169,10 @@ public class StudentRequest {
                     break;
                 case 4:
                     alterClass();
+                    break;
+                case 5:
+                    viewRequest();
+                    break;
                 default:
                     break;
             }
