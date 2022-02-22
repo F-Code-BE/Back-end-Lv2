@@ -23,7 +23,7 @@ public class Main {
                 do {
                     ViewInfo viewInfo = new ViewInfo();
                     userChoice = menu.getUserChoice();
-
+                    
                     switch (userChoice) {
                         case 1:
                             viewInfo.viewStudentInfo(userID);

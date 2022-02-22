@@ -86,8 +86,6 @@ public class StudentRequest {
     }
 
     public void changeInfo() {
-        user = new Student();
-        user.setId(user.getId());
         user.setName(Validation.inputString("Enter new name (type null to skip): ", "([\\w|\\s]+)"));
         user.setMail(Validation.inputString("Enter new email (type null to skip): ", Regex.EMAIL_PATTERN + "|null"));
         user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyyy or null to skip): ", true));
@@ -98,8 +96,6 @@ public class StudentRequest {
     }
 
     public void retake() {
-        user = new Student();
-        user.setId(user.getId());
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = "SELECT c.course_id FROM Class_student cs JOIN class c ON c.id = cs.class_id WHERE student_id = ?";
@@ -118,13 +114,11 @@ public class StudentRequest {
                 System.out.println("Wrong input, please try again!");
             }
         } while (choice >= courseList.size());
-        sendData("2", user.getId(), null, "couresId=" + courseList.get(choice));
+        sendData("2", user.getId(), null, "coursesId=" + courseList.get(choice));
         System.out.println("Request successful");
     }
 
     public void checkAttendance() {
-        user = new Student();
-        user.setId(user.getId());
         int choice = 0;
         FapMenu menu = new FapMenu();
         String query = " SELECT slot_id from Attendance";
@@ -143,11 +137,9 @@ public class StudentRequest {
         } while (choice >= slots.size());
         sendData("3", user.getId(), null, "slotId=" + slots.get(choice));
         System.out.println("Request successful");
-    }
+    }               
 
     public void alterClass() {
-        user = new Student();
-        user.setId(user.getId());
         int choice = 0;
         String courseId;
         String classId;
@@ -192,7 +184,7 @@ public class StudentRequest {
         } while (choice >= classes.size());
         classId = classes.get(choice);
 
-        sendData("4", user.getId(), null, "classid=" + classId);
+        sendData("4", user.getId(), null, "classId=" + classId);
         System.out.println("Request successful");
 
     }
