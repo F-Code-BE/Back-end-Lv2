@@ -51,6 +51,6 @@ public class TeacherRequest extends Request {
                 default:
                     break;
             }
-        } while (choice <= 5);
+        } while (choice <= 2);
     }
 }
