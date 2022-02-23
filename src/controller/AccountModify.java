@@ -5,9 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.sound.sampled.SourceDataLine;
+
 import java.lang.Integer;
 
 import patterns.Singleton;
+import view.FapMenu;
 import model.Student;
 import model.Teacher;
 import Lib.Validation;
@@ -80,10 +84,17 @@ public class AccountModify {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         String lastID = null;
-
-        String type = Validation.inputString("Enter role (teacher, student): ", "teacher|student");
-        try {
-            if (type.equals("student")) {
+        var menu = new FapMenu();
+        int userChoice;
+        System.out.println("Enter role to add account:");
+        menu.add("1. Student");
+        menu.add("2. Teacher");
+        menu.add("Others. Exit");
+        try{
+        do{
+            userChoice= menu.getUserChoice();
+            switch (userChoice) {
+                case 1:
                 Student student = new Student();
                 statement = conn.prepareStatement("SELECT TOP 1 * FROM Student WHERE major_id = ? ORDER BY id DESC");
                 
@@ -115,7 +126,9 @@ public class AccountModify {
                 statement.setString(6, student.getMajorID());
                 statement.executeUpdate();
                 System.out.println("Successful change");
-            } else {
+                break;
+
+                case 2:
                 Teacher teacher = new Teacher();
                 String[] partsName;
                 String lastName = null;
@@ -147,11 +160,12 @@ public class AccountModify {
                 statement.executeUpdate();
 
                 System.out.println("Successful change");
-            }
+                break;
+            } while(userChoice ==1 || userChoice ==2 );
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
+        
 
     public static void deleteAccount() {
         String type = Validation.inputString("Enter role (teacher, student): ", "teacher|student");
