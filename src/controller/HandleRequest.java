@@ -258,7 +258,6 @@ public class HandleRequest {
                 stmt.setString(3, "%" + courseId);
                 stmt.executeUpdate();
                 markAccept(request.getRequestId());
-              
 
             } else if (request.getType() == 3) {
                 String slotId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
@@ -268,13 +267,12 @@ public class HandleRequest {
                 stmt.setString(3, slotId);
                 stmt.executeUpdate();
                 markAccept(request.getRequestId());
-                
+
             } else {
                 String classId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
                 String subject = classId.substring(classId.indexOf('_') + 1);
                 String currentClass = getCurrentClass(request, subject);
 
-               
                 for (int i = 0; i < requests.size(); i++)
                     if (i != c && requests.get(i).getType() == 4) {
                         var otherRequest = requests.get(i);
@@ -303,9 +301,9 @@ public class HandleRequest {
                 number = Validation.inputInt("Enter request number that you want to accept (0 to finish): ");
                 if (number < 0 || number > requests.size()) {
                     System.out.println("PLease enter the valid number!");
-                } 
+                }
             } while (number < 0 || number > requests.size());
-          
+
             if (number == 0)
                 break;
             choices.add(number);
@@ -332,6 +330,7 @@ public class HandleRequest {
             e.printStackTrace();
         }
     }
+
     private static void rejectRequest() {
         var choices = new ArrayList<Integer>();
         while (true) {
@@ -340,17 +339,18 @@ public class HandleRequest {
                 number = Validation.inputInt("Enter request number that you want to reject (0 to finish): ");
                 if (number < 0 || number > requests.size()) {
                     System.out.println("PLease enter the valid number!");
-                } 
+                }
             } while (number < 0 || number > requests.size());
-          
+
             if (number == 0)
                 break;
             choices.add(number);
         }
         choices.forEach((c) -> {
             markReject(requests.get(c - 1).getRequestId());
-        });   
+        });
     }
+
     public static void showMenu() {
         getRequestsData();
         System.out.println("\n             List of pending requests: \n");
