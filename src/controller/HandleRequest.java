@@ -410,7 +410,4 @@ public class HandleRequest {
         }
         rejectRequest();
     }
-    public static void main(String[] args) {
-        showMenu();
-    }
 }
