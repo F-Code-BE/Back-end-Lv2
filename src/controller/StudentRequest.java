@@ -41,7 +41,7 @@ public class StudentRequest extends Request {
     private void changeInfo() {
         user.setName(Validation.inputString("Enter new name (type null to skip): ", "([\\w|\\s]+)"));
         user.setMail(Validation.inputString("Enter new email (type null to skip): ", Regex.EMAIL_PATTERN + "|null"));
-        user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyyy or null to skip): ", true));
+        user.setDateOfBirth(Validation.inputDate("Enter new date of birth (dd/mm/yyyy or null to skip): ", true));
         user.setMajorID(getMajorId());
         // save to table 
         sendData("1", user.getId(), null, user.toString2());
@@ -62,11 +62,10 @@ public class StudentRequest extends Request {
         do {
             choice = menu.getUserChoice();
             choice--;
-            if (choice == -1) break;
-            if (choice >= courseList.size()) {
+            if (choice >= courseList.size() || choice < 0) {
                 System.out.println("Wrong input, please try again!");
             }
-        } while (choice >= courseList.size());
+        } while (choice >= courseList.size() || choice < 0);
         sendData("2", user.getId(), null, "coursesId=" + courseList.get(choice));
         System.out.println("Request successful");
     }
@@ -83,11 +82,10 @@ public class StudentRequest extends Request {
         do {
             choice = menu.getUserChoice();
             choice--;
-            if (choice == -1) break;
-            if (choice >= slots.size()) {
+            if (choice >= slots.size() || choice < 0) {
                 System.out.println("Wrong input, please try again!");
             }
-        } while (choice >= slots.size());
+        } while (choice >= slots.size() || choice < 0);
         sendData("3", user.getId(), null, "slotId=" + slots.get(choice));
         System.out.println("Request successful");
     }               
@@ -112,11 +110,10 @@ public class StudentRequest extends Request {
         do {
             choice = menu.getUserChoice();
             choice--;
-            if (choice == -1) break;
-            if (choice >= courseList.size()) {
+            if (choice >= courseList.size() || choice < 0) {
                 System.out.println("Wrong input, please try again!");
             }
-        } while (choice >= courseList.size());
+        } while (choice >= courseList.size() || choice < 0);
         courseId = courseList.get(choice);
 
         //check all classes
@@ -130,11 +127,10 @@ public class StudentRequest extends Request {
         do {
             choice = menu.getUserChoice();
             choice--;
-            if (choice == -1) break;
-            if (choice >= classes.size()) {
+            if (choice >= classes.size() || choice < 0) {
                 System.out.println("Wrong input, please try again!");
             }
-        } while (choice >= classes.size());
+        } while (choice >= classes.size() || choice < 0);
         classId = classes.get(choice);
 
         sendData("4", user.getId(), null, "classId=" + classId);
