@@ -81,7 +81,7 @@ public class AccountModify {
         ResultSet resultSet = null;
         String lastID = null;
 
-        String type = Validation.inputString("Enter role (teacher, student): ", "teacher|student");
+        String type = Validation.inputString("Enter role (teacher, student, exit): ", "teacher|student|exit");
         try {
             if (type.equals("student")) {
                 Student student = new Student();
@@ -115,7 +115,8 @@ public class AccountModify {
                 statement.setString(6, student.getMajorID());
                 statement.executeUpdate();
                 System.out.println("Successful change");
-            } else {
+            } 
+            if (type.equals("teacher")) {
                 Teacher teacher = new Teacher();
                 String[] partsName;
                 String lastName = null;
