@@ -213,42 +213,46 @@ public class HandleRequest {
         var request = requests.get(c);
         try {
             if (request.getType() == 1) {
-                String message = request.getMessage();
-                message += ',';
-                var attributes = message.split(",");
-                String newName = attributes[1];
-                String newDoB = attributes[2];
-                String newMail = attributes[3];
-                String newMajor = attributes[4];
-                newName = newName.substring(newName.indexOf('=') + 1);
-                newDoB = newDoB.substring(newDoB.indexOf('=') + 1);
-                newMail = newMail.substring(newMail.indexOf('=') + 1);
-                newMajor = newMajor.substring(newMajor.indexOf('=') + 1);
-                if (!newName.equalsIgnoreCase("null")) {
-                    stmt = conn.prepareStatement("update student set name = ? where id = ?");
-                    stmt.setString(1, newName);
-                    stmt.setString(2, request.getStudentId());
-                    stmt.executeUpdate();
-                }
-                if (!newDoB.equalsIgnoreCase("null")) {
-                    stmt = conn.prepareStatement("update student set date_of_birth = ? where id = ?");
-                    stmt.setString(1, newDoB);
-                    stmt.setString(2, request.getStudentId());
-                    stmt.executeUpdate();
-                }
-                if (!newMail.equalsIgnoreCase("null")) {
-                    stmt = conn.prepareStatement("update student set mail = ? where id = ?");
-                    stmt.setString(1, newMail);
-                    stmt.setString(2, request.getStudentId());
-                    stmt.executeUpdate();
-                }
-                if (!newMajor.equalsIgnoreCase("null")) {
-                    stmt = conn.prepareStatement("update student set major_id = ? where id = ?");
-                    stmt.setString(1, newMajor);
-                    stmt.setString(2, request.getStudentId());
-                    stmt.executeUpdate();
-                }
-                markAccept(request.getRequestId());
+                if (request.getStudentId() != null) {
+                    String message = request.getMessage();
+                    message += ',';
+                    var attributes = message.split(",");
+                    String newName = attributes[1];
+                    String newDoB = attributes[2];
+                    String newMail = attributes[3];
+                    String newMajor = attributes[4];
+                    newName = newName.substring(newName.indexOf('=') + 1);
+                    newDoB = newDoB.substring(newDoB.indexOf('=') + 1);
+                    newMail = newMail.substring(newMail.indexOf('=') + 1);
+                    newMajor = newMajor.substring(newMajor.indexOf('=') + 1);
+                    if (!newName.equalsIgnoreCase("null")) {
+                        stmt = conn.prepareStatement("update student set name = ? where id = ?");
+                        stmt.setString(1, newName);
+                        stmt.setString(2, request.getStudentId());
+                        stmt.executeUpdate();
+                    }
+                    if (!newDoB.equalsIgnoreCase("null")) {
+                        stmt = conn.prepareStatement("update student set date_of_birth = ? where id = ?");
+                        stmt.setString(1, newDoB);
+                        stmt.setString(2, request.getStudentId());
+                        stmt.executeUpdate();
+                    }
+                    if (!newMail.equalsIgnoreCase("null")) {
+                        stmt = conn.prepareStatement("update student set mail = ? where id = ?");
+                        stmt.setString(1, newMail);
+                        stmt.setString(2, request.getStudentId());
+                        stmt.executeUpdate();
+                    }
+                    if (!newMajor.equalsIgnoreCase("null")) {
+                        stmt = conn.prepareStatement("update student set major_id = ? where id = ?");
+                        stmt.setString(1, newMajor);
+                        stmt.setString(2, request.getStudentId());
+                        stmt.executeUpdate();
+                    }
+                    markAccept(request.getRequestId());
+               } else {
+                   handleTeacherRequest(c);
+               }
             } else if (request.getType() == 2) {
                 String courseId = request.getMessage().substring(request.getMessage().indexOf('=') + 1);
                 stmt = conn.prepareStatement(
@@ -295,6 +299,36 @@ public class HandleRequest {
         }
     }
 
+    private static void handleTeacherRequest(int c) {
+        var conn = Singleton.getInstance();
+        PreparedStatement stmt;
+
+        var request = requests.get(c);
+        try {
+            String message = request.getMessage();
+            message += ',';
+            var attributes = message.split(",");
+            String newName = attributes[1];
+            String newMail = attributes[2];
+            newName = newName.substring(newName.indexOf('=') + 1);
+            newMail = newMail.substring(newMail.indexOf('=') + 1);
+            if (!newName.equalsIgnoreCase("null")) {
+                stmt = conn.prepareStatement("update teacher set name = ? where id = ?");
+                stmt.setString(1, newName);
+                stmt.setString(2, request.getTeacherId());
+                stmt.executeUpdate();
+            }
+            if (!newMail.equalsIgnoreCase("null")) {
+                stmt = conn.prepareStatement("update teacher set mail = ? where id = ?");
+                stmt.setString(1, newMail);
+                stmt.setString(2, request.getStudentId());
+                stmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     private static void acceptRequest() {
         var choices = new ArrayList<Integer>();
         while (true) {
@@ -355,15 +389,28 @@ public class HandleRequest {
         getRequestsData();
         System.out.println("\n             List of pending requests: \n");
         for (int i = 0; i < requests.size(); i++) {
-            System.out.println(
+            if (requests.get(i).getStudentId() != null){
+                System.out.println(
                     i + 1 + ". Student " + requests.get(i).getStudentId() + " want to " + showChoice(requests.get(i)));
+            } else {
+                System.out.println(
+                    i + 1 + ". Teacher " + requests.get(i).getTeacherId() + " want to " + showChoice(requests.get(i)));
+            }
         }
         acceptRequest();
         System.out.println("\n             List of pending requests: \n");
         for (int i = 0; i < requests.size(); i++) {
-            System.out.println(
+            if (requests.get(i).getStudentId() != null){
+                System.out.println(
                     i + 1 + ". Student " + requests.get(i).getStudentId() + " want to " + showChoice(requests.get(i)));
+            } else {
+                System.out.println(
+                    i + 1 + ". Teacher " + requests.get(i).getTeacherId() + " want to " + showChoice(requests.get(i)));
+            }
         }
         rejectRequest();
+    }
+    public static void main(String[] args) {
+        showMenu();
     }
 }
