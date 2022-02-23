@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.sound.sampled.SourceDataLine;
+
 import Lib.Validation;
 import patterns.Singleton;
 import view.FapMenu;
@@ -76,8 +78,10 @@ public class CheckAttendence {
             while (rs.next()) {
                 String studentId = rs.getString(1);
                 System.out.println(studentId + " " + rs.getString(2));
-                studentIds.add(studentId);
+                studentIds.add(studentId.toUpperCase());
+
             }
+           
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -123,7 +127,7 @@ public class CheckAttendence {
             if (absentStudent.equals("0"))
                 break;
             if (!studentIds.contains(absentStudent)) {
-                System.out.println("Student not int this class.");
+                System.out.println("Student not in this class.");
                 continue;
             }
             try {
@@ -134,6 +138,7 @@ public class CheckAttendence {
                 stmt.setString(2, slotId);
                 stmt.setString(3, absentStudent);
                 stmt.executeUpdate();
+                System.out.println("Successful!");
             } catch (SQLException e) {
 
                 e.printStackTrace();
