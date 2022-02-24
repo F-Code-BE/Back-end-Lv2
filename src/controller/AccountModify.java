@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.sound.sampled.SourceDataLine;
-
 import java.lang.Integer;
 
 import patterns.Singleton;
@@ -51,17 +49,17 @@ public class AccountModify {
                         flag = true;
                     }
                 }
-                
+
                 if (!flag) {
                     System.out.println("Id not found. Please try again!");
                 }
-            }   while (!flag);
+            } while (!flag);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return id;
     }
-    
+
     public static String generateId(String preId, String prefix, String patterns) {
         Pattern p = Pattern.compile(patterns);
         Matcher m = p.matcher(preId);
@@ -79,7 +77,7 @@ public class AccountModify {
     }
 
     // =======================  main features
-    public static void addingAccount() { 
+    public static void addingAccount() {
         Connection conn = Singleton.getInstance();
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -90,82 +88,82 @@ public class AccountModify {
         menu.add("1. Student");
         menu.add("2. Teacher");
         menu.add("Others. Exit");
-        try{
-        do{
-            userChoice= menu.getUserChoice();
-            switch (userChoice) {
-                case 1:
-                Student student = new Student();
-                statement = conn.prepareStatement("SELECT TOP 1 * FROM Student WHERE major_id = ? ORDER BY id DESC");
-                
-                // input object 
-                student.setName(Validation.inputString("Enter student name: ", ""));
-                student.setDateOfBirth(Validation.inputDate("Enter date of birth (dd/mm/yyyy): "));
-                student.setMail(Validation.inputString("Enter email: ", Regex.EMAIL_PATTERN));
-                student.setMajorID(Validation.inputString("Enter Major: ", ""));
+        try {
+            do {
+                userChoice = menu.getUserChoice();
+                switch (userChoice) {
+                    case 1:
+                        Student student = new Student();
+                        statement = conn.prepareStatement("SELECT TOP 1 * FROM Student WHERE major_id = ? ORDER BY id DESC");
 
-                // find the last student in table
-                statement.setString(1, student.getMajorID());
-                resultSet = statement.executeQuery();
-                if (resultSet.next()) {
-                    lastID = resultSet.getString(1);
-                } else {
-                    lastID = "160000";
+                        // input object 
+                        student.setName(Validation.inputString("Enter student name: ", ""));
+                        student.setDateOfBirth(Validation.inputDate("Enter date of birth (dd/mm/yyyy): "));
+                        student.setMail(Validation.inputString("Enter email: ", Regex.EMAIL_PATTERN));
+                        student.setMajorID(Validation.inputString("Enter Major: ", ""));
+
+                        // find the last student in table
+                        statement.setString(1, student.getMajorID());
+                        resultSet = statement.executeQuery();
+                        if (resultSet.next()) {
+                            lastID = resultSet.getString(1);
+                        } else {
+                            lastID = "160000";
+                        }
+                        System.out.println(lastID);
+                        // generate id
+                        student.setId(generateId(lastID, student.getMajorID(), "\\d+"));
+
+                        // insert to sql 
+                        statement = conn.prepareStatement("INSERT INTO student VALUES (?, ?, ?, ?, ?, ?)");
+                        statement.setString(1, student.getId());
+                        statement.setString(2, student.getName());
+                        statement.setString(3, Validation.convertDateFormat(student.getDateOfBirth(), Regex.DATE_PATTERN));
+                        statement.setString(4, "1234");
+                        statement.setString(5, student.getMail());
+                        statement.setString(6, student.getMajorID());
+                        statement.executeUpdate();
+                        System.out.println("Successful change");
+                        break;
+                    case 2:
+                        Teacher teacher = new Teacher();
+                        String[] partsName;
+                        String lastName = null;
+                        // input 
+                        teacher.setName(Validation.inputString("Enter name: ", ""));
+                        teacher.setMail(Validation.inputString("Enter mail: ", Regex.EMAIL_PATTERN));
+
+                        // find the last id 
+                        partsName = teacher.getName().split(" ");
+                        lastName = partsName[partsName.length - 1];
+
+                        statement = conn.prepareStatement("SELECT TOP 1 * FROM Teacher WHERE id LIKE ? ORDER BY id DESC");
+                        statement.setString(1, lastName + "%");
+                        resultSet = statement.executeQuery();
+                        if (resultSet.next()) {
+                            lastID = resultSet.getString(1);
+                        } else {
+                            lastID = "0";
+                        }
+                        //generate Id
+                        teacher.setId(generateId(lastID, lastName, "\\d+"));
+
+                        // Insert to table
+                        statement = conn.prepareStatement("INSERT INTO Teacher VALUES (?, ?, ?, ?)");
+                        statement.setString(1, teacher.getId());
+                        statement.setString(2, teacher.getName());
+                        statement.setString(3, teacher.getMail());
+                        statement.setString(4, "1234");
+                        statement.executeUpdate();
+
+                        System.out.println("Successful change");
+                        break;
                 }
-                System.out.println(lastID);
-                // generate id
-                student.setId(generateId(lastID, student.getMajorID(), "\\d+"));
-                
-                // insert to sql 
-                statement = conn.prepareStatement("INSERT INTO student VALUES (?, ?, ?, ?, ?, ?)");
-                statement.setString(1, student.getId());
-                statement.setString(2, student.getName());
-                statement.setString(3, Validation.convertDateFormat(student.getDateOfBirth(), Regex.DATE_PATTERN));
-                statement.setString(4, "1234");
-                statement.setString(5, student.getMail());
-                statement.setString(6, student.getMajorID());
-                statement.executeUpdate();
-                System.out.println("Successful change");
-                break;
-
-                case 2:
-                Teacher teacher = new Teacher();
-                String[] partsName;
-                String lastName = null;
-                // input 
-                teacher.setName(Validation.inputString("Enter name: ", ""));
-                teacher.setMail(Validation.inputString("Enter mail: ", Regex.EMAIL_PATTERN));
-                
-                // find the last id 
-                partsName = teacher.getName().split(" ");
-                lastName = partsName[partsName.length - 1];
-
-                statement = conn.prepareStatement("SELECT TOP 1 * FROM Teacher WHERE id LIKE ? ORDER BY id DESC");
-                statement.setString(1, lastName + "%");
-                resultSet = statement.executeQuery();
-                if (resultSet.next()){
-                    lastID = resultSet.getString(1);
-                } else {
-                    lastID = "0";
-                }
-                //generate Id
-                teacher.setId(generateId(lastID, lastName, "\\d+"));
-                
-                // Insert to table
-                statement = conn.prepareStatement("INSERT INTO Teacher VALUES (?, ?, ?, ?)");
-                statement.setString(1, teacher.getId());
-                statement.setString(2, teacher.getName());
-                statement.setString(3, teacher.getMail());
-                statement.setString(4, "1234");
-                statement.executeUpdate();
-
-                System.out.println("Successful change");
-                break;
-            } while(userChoice ==1 || userChoice ==2 );
+            } while (userChoice == 1 || userChoice == 2);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
+    }
 
     public static void deleteAccount() {
         String type = Validation.inputString("Enter role (teacher, student): ", "teacher|student");
