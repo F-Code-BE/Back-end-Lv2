@@ -85,8 +85,8 @@ public class AccountModify {
         var menu = new FapMenu();
         int userChoice;
         System.out.println("Enter role to add account:");
-        menu.add("1. Student");
-        menu.add("2. Teacher");
+        menu.add("Student");
+        menu.add("Teacher");
         menu.add("Others. Exit");
         try {
             do {
