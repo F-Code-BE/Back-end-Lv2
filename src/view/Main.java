@@ -1,5 +1,6 @@
 package view;
 
+import Lib.Validation;
 import controller.*;
 
 public class Main {
@@ -42,7 +43,11 @@ public class Main {
                             viewInfo.viewTimetable(userID);
                             break;
                         case 6:
-                            ChangeGroup.getAllCourses(userID);
+                            boolean check;
+                            do {
+                                ChangeGroup.getAllCourses(userID);
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                             break;
                         case 7:
                             StudentRequest request = new StudentRequest(userID);
@@ -67,16 +72,26 @@ public class Main {
                             viewInfo.viewTeacherInfo(userID);
                             break;
                         case 2:
-                            var checkAttendence = new CheckAttendence(userID);
-                            checkAttendence.showMenu();
+                            boolean check;
+                            do {
+                                var checkAttendence = new CheckAttendence(userID);
+                                checkAttendence.showMenu();
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                             break;
                         case 3:
-                            TeacherRequest request = new TeacherRequest(userID);
-                            request.showMenu();
+                            do {
+                                TeacherRequest request = new TeacherRequest(userID);
+                                request.showMenu();
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                             break;
                         case 4:
-                            var inputMark = new InputMark(userID);
-                            inputMark.showMenu();
+                            do {
+                                var inputMark = new InputMark(userID);
+                                inputMark.showMenu();
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                             break;
                         default:
                             break;
@@ -92,13 +107,23 @@ public class Main {
                     userChoice = menu.getUserChoice();
                     switch (userChoice) {
                         case 1:
-                            AccountModify.addingAccount();
+                            Boolean check;
+                            do {
+                                AccountModify.addingAccount();
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                             break;
                         case 2:
-                            AccountModify.deleteAccount();
+                            do {
+                                AccountModify.deleteAccount();
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                             break;
-                        case 3: 
-                            HandleRequest.showMenu();
+                        case 3:
+                            do {
+                                HandleRequest.showMenu();
+                                check = Validation.confirmYesNo("Do you want to continue?(Y/N)");
+                            } while (check);
                         default:
                             break;
                     }
